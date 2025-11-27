@@ -44,8 +44,10 @@ _docker=false                        # Install Docker
 _gnome_boxes=false                   # Install GNOME Boxes virtualization
 _google_chrome=true                 # Install Google Chrome
 _mounts=false                        # Configure network/local mounts
+_nordvpn=false                       # Install NordVPN client
 _obsidian=true                       # Install Obsidian markdown editor
 _ollama=false                        # Install Ollama AI runtime
+_qbittorrent=false                   # Install qBittorrent torrent client
 _sddm=false                          # Configure SDDM login manager
 _steam=false                         # Install Steam gaming platform with RPM Fusion
 _synology=true                      # Install Synology Drive
@@ -66,7 +68,7 @@ _zoom=false                          # Install Zoom video conferencing
 # Format: "remote_share:mount_point:home_symlink,option1=value,option2=value"
 _network_mounts=(
     # CIFS/SMB example:
-    "//nimbus/code:/mnt/nimbus/code:~/development,credfile=~/.smbcreds"
+    "//nimbus/media:/mnt/nimbus/media:~/nimbus-media,credfile=~/.smbcreds"
     #
     # NFS example (no credentials):
     # "nfsserver:/export/path:/mnt/nfs:~/nfs"
