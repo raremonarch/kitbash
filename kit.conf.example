@@ -39,6 +39,7 @@ _sudo_timeout=15
 
 _claude_cli=false                    # Install Claude CLI (AI assistant)
 _discord=false                       # Install Discord chat client from RPM Fusion
+_dropbox=false                       # Install Dropbox desktop client
 _dotfiles=true                      # Clone dotfiles repo (requires _dotfiles_repo)
 _docker=false                        # Install Docker
 _gnome_boxes=false                   # Install GNOME Boxes virtualization
