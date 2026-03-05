@@ -3,6 +3,8 @@
 # Module: vscode.sh
 # Purpose: Install Visual Studio Code editor and repository
 # Tier: 3 (Package Repositories)
+# Description: Visual Studio Code editor installed via the official Microsoft repository
+# Installs: code
 
 log_info "Setting up Visual Studio Code repository"
 

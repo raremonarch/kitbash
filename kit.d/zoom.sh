@@ -3,6 +3,8 @@
 # Module: zoom.sh
 # Purpose: Install Zoom video conferencing application
 # Tier: 5 (Applications)
+# Description: Zoom video conferencing installed from the official Zoom RPM
+# Installs: zoom
 
 log_info "Installing Zoom"
 

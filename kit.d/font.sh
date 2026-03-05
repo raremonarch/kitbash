@@ -3,6 +3,8 @@
 # Module: font.sh
 # Purpose: Download and install fonts from URLs or local paths
 # Tier: 2 (Core Desktop Environment)
+# Description: Downloads and installs fonts from URLs to ~/.local/share/fonts
+# Installs: none (fonts downloaded to ~/.local/share/fonts)
 
 PRIMARY_FONT="${1:-$_font}"
 

@@ -3,6 +3,8 @@
 # Module: obsidian.sh
 # Purpose: Install Obsidian markdown editor via AppImage
 # Tier: 5 (Applications)
+# Description: Obsidian markdown knowledge base editor as AppImage with desktop entry
+# Installs: fuse-libs, obsidian (AppImage: ~/.local/bin/obsidian)
 
 log_info "Installing Obsidian markdown editor"
 

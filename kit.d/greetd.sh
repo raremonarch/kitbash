@@ -3,6 +3,8 @@
 # Module: greetd.sh
 # Purpose: Install and configure greetd + gtkgreet display manager
 # Tier: 2 (Core Desktop Environment)
+# Description: greetd display manager with gtkgreet frontend and cage Wayland compositor
+# Installs: greetd, gtkgreet, cage
 
 log_info "Setting up greetd display manager with gtkgreet"
 

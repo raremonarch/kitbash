@@ -3,6 +3,8 @@
 # Module: editor.sh
 # Purpose: Set default EDITOR and VISUAL environment variables
 # Tier: 1 (System Fundamentals)
+# Description: Sets default EDITOR and VISUAL environment variables in shell profile
+# Installs: none (configuration only)
 
 EDITOR_CHOICE="${1:-$_editor}"
 

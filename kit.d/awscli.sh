@@ -3,6 +3,8 @@
 # Module: awscli.sh
 # Purpose: Install AWS Command Line Interface v2 (awscli)
 # Tier: 5 (Applications)
+# Description: AWS CLI v2 downloaded and installed to /usr/local/bin
+# Installs: aws (binary: /usr/local/bin/aws)
 
 log_info "Setting up AWS CLI v2"
 

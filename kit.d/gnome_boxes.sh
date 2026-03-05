@@ -3,6 +3,8 @@
 # Module: gnome_boxes.sh
 # Purpose: Install GNOME Boxes and virt-manager for virtualization
 # Tier: 5 (Applications)
+# Description: GNOME Boxes virtualization app and optionally virt-manager
+# Installs: gnome-boxes, virt-manager (optional)
 
 log_info "Installing virtualization tools"
 

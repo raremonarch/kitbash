@@ -3,6 +3,8 @@
 # Module: sddm.sh
 # Purpose: Configure SDDM login manager
 # Tier: 2 (Core Desktop Environment)
+# Description: Configures SDDM display manager theme and session settings
+# Installs: none (configuration only)
 
 # Exit on any error
 set -e

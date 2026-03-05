@@ -3,6 +3,8 @@
 # Module: claude_cli.sh
 # Purpose: Install Claude CLI (official native binary)
 # Tier: 5 (Applications)
+# Description: Official Claude CLI native binary
+# Installs: claude (binary)
 
 log_info "Installing Claude CLI"
 

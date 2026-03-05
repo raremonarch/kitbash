@@ -3,6 +3,8 @@
 # Module: mounts.sh
 # Purpose: Configure network and local mount points with safety checks
 # Tier: 6 (System Services)
+# Description: Configures CIFS/NFS network and local disk mounts in /etc/fstab
+# Installs: none (configuration only)
 
 log_info "Setting up mounts and symlinks"
 

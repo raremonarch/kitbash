@@ -3,7 +3,8 @@
 # Module: sudo_timeout.sh
 # Purpose: Configure sudo password cache timeout
 # Tier: 1 (System Fundamentals)
-# Can be called with timeout value as parameter or uses _sudo_timeout from kit.conf
+# Description: Configures sudo password cache timeout via /etc/sudoers.d/kitbash-sudo
+# Installs: none (configuration only)
 
 # Determine timeout value - use parameter if provided, otherwise use config
 timeout_value="${1:-$_sudo_timeout}"

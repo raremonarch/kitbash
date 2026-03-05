@@ -3,6 +3,8 @@
 # Module: theme.sh
 # Purpose: Install GTK theme for dark mode support (Catppuccin)
 # Tier: 2 (Core Desktop Environment)
+# Description: Installs Catppuccin Mocha GTK theme for dark mode desktop environments
+# Installs: sassc, gtk-murrine-engine, gnome-themes-extra (build dependencies)
 
 THEME="${1:-$_theme}"
 

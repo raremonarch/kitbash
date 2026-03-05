@@ -82,6 +82,9 @@ Kitbash is a modular system configuration and application installer for Fedora L
 
 # Module: example.sh
 # Purpose: Brief description of what this module does
+# Tier: N (Tier Name)
+# Description: Human-readable description for --info display
+# Installs: package1, package2 (or "none (configuration only)")
 
 # 1. Get configuration value (parameter or kit.conf variable)
 MODULE_VALUE="${1:-$_example}"

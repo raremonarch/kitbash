@@ -3,6 +3,8 @@
 # Module: synology.sh
 # Purpose: Install Synology Drive client from COPR repository
 # Tier: 5 (Applications)
+# Description: Synology Drive client installed via COPR repository
+# Installs: synology-drive-noextra
 
 # Exit on any error
 set -e

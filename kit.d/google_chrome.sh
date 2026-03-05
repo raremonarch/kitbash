@@ -3,6 +3,8 @@
 # Module: google_chrome.sh
 # Purpose: Install Google Chrome browser and repository
 # Tier: 3 (Package Repositories)
+# Description: Google Chrome browser via the official Google repository
+# Installs: google-chrome-stable
 
 log_info "Setting up Google Chrome repository"
 

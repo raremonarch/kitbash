@@ -3,6 +3,8 @@
 # Module: docker.sh
 # Purpose: Install and configure Docker engine
 # Tier: 5 (Applications)
+# Description: Docker Engine with CLI tools, containerd, and Compose plugin
+# Installs: docker-ce, docker-ce-cli, containerd.io, docker-buildx-plugin, docker-compose-plugin
 
 # Exit on any error
 set -e

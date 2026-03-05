@@ -3,6 +3,8 @@
 # Module: hostname.sh
 # Purpose: Set system hostname via hostnamectl
 # Tier: 1 (System Fundamentals)
+# Description: Sets the system hostname using hostnamectl
+# Installs: none (configuration only)
 
 # Check if hostname is provided as first parameter
 if [ -z "$1" ]; then
