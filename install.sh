@@ -1,9 +1,9 @@
-# Example usage: curl -fsSL https://raw.githubusercontent.com/daevski/kitbash/main/install.sh | bash
+# Example usage: curl -fsSL https://raw.githubusercontent.com/raremonarch/kitbash/main/install.sh | bash
 
-gh_username=daevski
 repo_name=kitbash
-working_dir="$HOME/Downloads"
-target_dir="$working_dir/$repo_name"
+gh_username=raremonarch
+
+target_dir="$HOME/code/raremonarch/$repo_name"
 alias_name="${KITBASH_ALIAS:-kit}"
 
 # Function to add or update kit alias in .bashrc
@@ -18,13 +18,13 @@ set_alias_kit() {
 
 # Function to install kitbash
 install_kit() {
-    # Remove existing directory if it exists
     if [ -d "$target_dir" ]; then
-        rm -rf "$target_dir"
+        echo "Kitbash already installed at $target_dir"
+    else
+        mkdir -p "$(dirname "$target_dir")"
+        git clone -q https://github.com/$gh_username/$repo_name "$target_dir"
+        chmod +x "$target_dir/kit-start.sh"
     fi
-
-    git clone -q https://github.com/$gh_username/$repo_name "$target_dir"
-    chmod +x "$target_dir/kit-start.sh"
 
     # Set up the alias
     set_alias_kit "$target_dir/kit-start.sh"
