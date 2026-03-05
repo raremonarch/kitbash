@@ -3,7 +3,7 @@
 # Provides clean console output with detailed logging to file
 
 # Configuration
-LOG_FILE="${LOG_FILE:-${KITBASH_LOG:-$HOME/kit.log}}"
+LOG_FILE="${LOG_FILE:-${KITBASH_LOG:-${XDG_STATE_HOME:-$HOME/.local/state}/kitbash/kit.log}}"
 LOG_LEVEL="${LOG_LEVEL:-INFO}"  # DEBUG, INFO, WARNING, ERROR
 
 # Colors for console output
@@ -16,6 +16,7 @@ _LOG_COLOR_GRAY='\033[0;90m'
 
 # Initialize log file (called once at start)
 log_init() {
+    mkdir -p "$(dirname "$LOG_FILE")"
     local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
     echo "========================================" > "$LOG_FILE"
     echo "Setup Log - Started at $timestamp" >> "$LOG_FILE"

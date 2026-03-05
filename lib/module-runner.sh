@@ -38,13 +38,16 @@ execute_module() {
         "boolean_true")
             log_debug "Module '$module_name': enabled, running with defaults"
             run_module_with_defaults "$module_name" "$script_file"
+            return $?
             ;;
         "configured")
             log_debug "Module '$module_name': configured with value '$pref_value', running"
             run_module_with_value "$module_name" "$script_file" "$pref_value"
+            return $?
             ;;
         "skip")
             log_debug "Module '$module_name': disabled, skipping"
+            return $KIT_EXIT_MODULE_SKIPPED
             ;;
     esac
 }
@@ -63,10 +66,12 @@ run_module_with_defaults() {
             log_info "Running module: $module_name"
             if (source "$script_file"); then
                 log_success "Module '$module_name' completed"
+                return 0
             else
                 local exit_code=$?
                 log_error "Module '$module_name' failed with exit code $exit_code"
                 log_warning "Continuing with remaining modules..."
+                return $exit_code
             fi
             ;;
     esac
@@ -87,10 +92,12 @@ run_module_with_value() {
             log_info "Running module: $module_name (configured: $pref_value)"
             if (source "$script_file" "$pref_value"); then
                 log_success "Module '$module_name' completed"
+                return 0
             else
                 local exit_code=$?
                 log_error "Module '$module_name' failed with exit code $exit_code"
                 log_warning "Continuing with remaining modules..."
+                return $exit_code
             fi
             ;;
     esac
@@ -136,7 +143,7 @@ process_module() {
     # Check if preference variable exists
     if ! declare -p "$pref_var" >/dev/null 2>&1; then
         log_debug "Module '$module_name': no preference variable '$pref_var' found, skipping"
-        return 0
+        return $KIT_EXIT_MODULE_SKIPPED
     fi
     
     # Get preference value and execution info
@@ -192,8 +199,16 @@ run_discovered_modules() {
     # Process modules in sorted order
     for entry in "${sorted_modules[@]}"; do
         script_file="${entry#*:}"  # Remove tier prefix
+        local module_name
+        module_name=$(basename "$script_file" .sh)
         process_module "$script_file"
+        local module_exit=$?
+        # Record result for all modules that actually ran (not skipped)
+        if [ "$module_exit" -ne "$KIT_EXIT_MODULE_SKIPPED" ]; then
+            state_record_module "$module_name" "$module_exit"
+        fi
     done
 
+    state_write
     log_success "All modules completed"
 }

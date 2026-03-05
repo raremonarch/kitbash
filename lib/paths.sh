@@ -56,8 +56,12 @@ init_paths() {
     export KITBASH_LIB="$KITBASH_ROOT/lib"
     export KITBASH_CONFIG="$KITBASH_ROOT/kit.conf"
     export KITBASH_CONFIG_EXAMPLE="$KITBASH_ROOT/kit.conf.example"
-    export KITBASH_LOG="$KITBASH_ROOT/kit.log"
     export KITBASH_PACKAGES="$KITBASH_ROOT/packages.txt"
+
+    # XDG state directory for runtime-generated files (log, state tracking)
+    export KITBASH_STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/kitbash"
+    export KITBASH_STATE_FILE="$KITBASH_STATE_DIR/state.json"
+    export KITBASH_LOG="$KITBASH_STATE_DIR/kit.log"
 
     # Default alias name for kitbash
     export KITBASH_ALIAS="${KITBASH_ALIAS:-kit}"

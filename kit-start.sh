@@ -288,17 +288,17 @@ install_dependencies() {
     
     if command -v dnf >/dev/null 2>&1; then
         # Fedora
-        sudo dnf install -y git curl wget
+        sudo dnf install -y git curl wget jq
     elif command -v apt >/dev/null 2>&1; then
         # Debian/Ubuntu
         sudo apt update
-        sudo apt install -y git curl wget
+        sudo apt install -y git curl wget jq
     elif command -v pacman >/dev/null 2>&1; then
         # Arch
-        sudo pacman -S --noconfirm git curl wget
+        sudo pacman -S --noconfirm git curl wget jq
     else
         log_error "Could not install dependencies - unknown package manager"
-        log_error "Please install git, curl, and wget manually"
+        log_error "Please install git, curl, wget, and jq manually"
         exit 1
     fi
     

@@ -62,9 +62,18 @@ main_setup() {
     source "$KITBASH_LIB/validation.sh"
     source "$KITBASH_LIB/module-runner.sh"
     source "$KITBASH_LIB/setup-functions.sh"
+    source "$KITBASH_LIB/state.sh"
 
-    # Initialize logging
+    # Initialize logging and state tracking
     log_init
+
+    # jq is required for state tracking; install now if missing
+    if ! command -v jq >/dev/null 2>&1; then
+        log_info "Installing required dependency: jq"
+        source "$KITBASH_MODULES/jq.sh"
+    fi
+
+    state_init
 
     # Validate preferences before any execution
     validate_preferences "$1"
@@ -99,6 +108,8 @@ main_setup() {
                 module_exit_code=$?
             fi
 
+            state_record_module "$requested_module" "$module_exit_code"
+            state_write
             return $module_exit_code
         fi
     fi
