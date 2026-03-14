@@ -68,11 +68,18 @@ main_setup() {
     source "$KITBASH_LIB/setup-functions.sh"
     source "$KITBASH_LIB/state.sh"
 
-    # jq is required for state tracking; install now if missing
-    if ! command -v jq >/dev/null 2>&1; then
-        log_info "Installing required dependency: jq"
-        source "$KITBASH_MODULES/jq.sh"
-    fi
+    # jq is required for state tracking; install now if missing.
+    # Skip for help commands — jq.sh uses exit (not return) when sourced,
+    # which would kill the shell before show_usage is reached.
+    case "${1:-}" in
+        help|-h|--help) ;;
+        *)
+            if ! command -v jq >/dev/null 2>&1; then
+                log_info "Installing required dependency: jq"
+                source "$KITBASH_MODULES/jq.sh"
+            fi
+            ;;
+    esac
 
     # On Arch: ensure an AUR helper is available before any modules run.
     # Skip for help/info commands — no packages will be installed.
