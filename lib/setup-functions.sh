@@ -61,6 +61,7 @@ show_usage() {
     echo "Run the full setup or individual modules:"
     echo "  $cmd_name --setup                 Run all enabled modules (discovered automatically)"
     echo "  $cmd_name <module_name>           Run a specific module"
+    echo "  $cmd_name log                     Open the kit log file in \$EDITOR"
     echo "  $cmd_name help                    Show this help message"
     echo ""
     echo "Configuration:"

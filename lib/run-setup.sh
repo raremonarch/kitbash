@@ -25,8 +25,8 @@ main_setup() {
     # vs running full setup (config is required)
     if [ $# -gt 0 ]; then
         case "$1" in
-            help|-h|--help)
-                # Help command doesn't need config
+            help|-h|--help|log)
+                # Help/log commands don't need config
                 export KITBASH_REQUIRE_CONFIG=false
                 ;;
             *)
@@ -69,10 +69,10 @@ main_setup() {
     source "$KITBASH_LIB/state.sh"
 
     # jq is required for state tracking; install now if missing.
-    # Skip for help commands — jq.sh uses exit (not return) when sourced,
-    # which would kill the shell before show_usage is reached.
+    # Skip for help/log commands — jq.sh uses return, but no need to install jq
+    # just to open a log file or show usage.
     case "${1:-}" in
-        help|-h|--help) ;;
+        help|-h|--help|log) ;;
         *)
             if ! command -v jq >/dev/null 2>&1; then
                 log_info "Installing required dependency: jq"
@@ -82,9 +82,9 @@ main_setup() {
     esac
 
     # On Arch: ensure an AUR helper is available before any modules run.
-    # Skip for help/info commands — no packages will be installed.
+    # Skip for help/log commands — no packages will be installed.
     case "${1:-}" in
-        help|-h|--help) ;;
+        help|-h|--help|log) ;;
         *) pkg_ensure_aur_helper ;;
     esac
 
@@ -131,6 +131,17 @@ main_setup() {
 
     # Handle special cases and fallbacks
     case "$requested_module" in
+        "log")
+            local log_file="${LOG_FILE:-$HOME/kit.log}"
+            if [ ! -f "$log_file" ]; then
+                echo "No log file found at $log_file"
+                return 1
+            fi
+            local editor="${EDITOR:-${VISUAL:-vi}}"
+            echo "Opening $log_file"
+            "$editor" "$log_file"
+            return 0
+            ;;
         "help"|"-h"|"--help")
             show_usage
             return 0
