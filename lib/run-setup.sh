@@ -59,6 +59,7 @@ main_setup() {
 
     # Load remaining library functions
     source "$KITBASH_LIB/logging.sh"
+    source "$KITBASH_LIB/pkg.sh"
     source "$KITBASH_LIB/validation.sh"
     source "$KITBASH_LIB/module-runner.sh"
     source "$KITBASH_LIB/setup-functions.sh"

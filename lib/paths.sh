@@ -102,7 +102,7 @@ verify_installation() {
     fi
 
     # Check for required library files
-    local required_libs=("logging.sh" "config.sh" "module-runner.sh" "validation.sh")
+    local required_libs=("logging.sh" "pkg.sh" "config.sh" "module-runner.sh" "validation.sh")
     for lib in "${required_libs[@]}"; do
         if [ ! -f "$KITBASH_LIB/$lib" ]; then
             echo "ERROR: Required library not found: $KITBASH_LIB/$lib" >&2
