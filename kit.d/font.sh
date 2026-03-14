@@ -129,7 +129,7 @@ done
 
 # Rebuild font cache if any fonts were installed
 if [ $FONTS_INSTALLED -gt 0 ]; then
-    run_with_progress "rebuilding font cache" fc-cache -fv
+    run_with_progress "rebuilding font cache" fc-cache -f
 fi
 
 # Summary
