@@ -571,21 +571,28 @@ spawn-sh-at-startup \"$wallpaper_cmd\"" "$NIRI_CONFIG"
     return 0
 }
 
-# Detect which compositor is being used
+# Detect which compositor is running.
+# Use XDG_CURRENT_DESKTOP first (authoritative for the live session),
+# then fall back to pgrep. Config file presence is NOT used — a user may
+# have configs for multiple compositors installed simultaneously.
 _compositor=""
-if [[ "$XDG_CURRENT_DESKTOP" == *"Hyprland"* ]] || [ -f "$HOME/.config/hypr/hyprland.conf" ]; then
+if [[ "$XDG_CURRENT_DESKTOP" == *"Hyprland"* ]]; then
     _compositor="hyprland"
-    log_debug "Detected Hyprland compositor"
-elif [[ "$XDG_CURRENT_DESKTOP" == *"sway"* ]] || [ -f "$HOME/.config/sway/config" ]; then
+elif [[ "$XDG_CURRENT_DESKTOP" == *"sway"* ]]; then
     _compositor="sway"
-    log_debug "Detected Sway compositor"
-elif [[ "$XDG_CURRENT_DESKTOP" == *"niri"* ]] || [ -f "$HOME/.config/niri/config.kdl" ]; then
+elif [[ "$XDG_CURRENT_DESKTOP" == *"niri"* ]]; then
     _compositor="niri"
-    log_debug "Detected Niri compositor"
+elif pgrep -x niri >/dev/null 2>&1; then
+    _compositor="niri"
+elif pgrep -x Hyprland >/dev/null 2>&1; then
+    _compositor="hyprland"
+elif pgrep -x sway >/dev/null 2>&1; then
+    _compositor="sway"
 else
-    log_warning "Could not detect compositor (Sway, Hyprland, or Niri)"
+    log_warning "Could not detect running compositor (Sway, Hyprland, or Niri)"
     _compositor="unknown"
 fi
+log_debug "Detected compositor: $_compositor (XDG_CURRENT_DESKTOP=$XDG_CURRENT_DESKTOP)"
 
 # Apply wallpaper to specified targets
 log_debug "Applying wallpaper to targets: ${_wallpaper_targets[*]}"
