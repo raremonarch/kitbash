@@ -74,8 +74,12 @@ main_setup() {
         source "$KITBASH_MODULES/jq.sh"
     fi
 
-    # On Arch: ensure an AUR helper is available before any modules run
-    pkg_ensure_aur_helper
+    # On Arch: ensure an AUR helper is available before any modules run.
+    # Skip for help/info commands — no packages will be installed.
+    case "${1:-}" in
+        help|-h|--help) ;;
+        *) pkg_ensure_aur_helper ;;
+    esac
 
     state_init
 
