@@ -74,6 +74,9 @@ main_setup() {
         source "$KITBASH_MODULES/jq.sh"
     fi
 
+    # On Arch: ensure an AUR helper is available before any modules run
+    pkg_ensure_aur_helper
+
     state_init
 
     # Validate preferences before any execution

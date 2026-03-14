@@ -174,6 +174,39 @@ pkg_copr_enable() {
 }
 
 # ---------------------------------------------------------------------------
+# AUR helper bootstrap
+# ---------------------------------------------------------------------------
+
+# Ensure an AUR helper is available on Arch. If neither paru nor yay is found,
+# installs paru from the AUR using makepkg. No-op on non-Arch systems.
+# Call this from run-setup.sh after pkg_detect, before running any modules.
+pkg_ensure_aur_helper() {
+    [ "$KITBASH_PKG_MANAGER" = "pacman" ] || return 0
+    [ -n "${KITBASH_AUR_HELPER:-}" ] && return 0
+
+    log_info "No AUR helper found — installing paru"
+
+    local tmp_dir
+    tmp_dir="$(mktemp -d)"
+
+    run_with_progress "installing build dependencies" \
+        sudo pacman -S --needed --noconfirm base-devel git
+
+    run_with_progress "cloning paru" \
+        git clone -q https://aur.archlinux.org/paru.git "$tmp_dir/paru"
+
+    if (cd "$tmp_dir/paru" && makepkg -si --noconfirm); then
+        rm -rf "$tmp_dir"
+        export KITBASH_AUR_HELPER="paru"
+        log_success "paru installed"
+    else
+        rm -rf "$tmp_dir"
+        log_error "paru installation failed — AUR packages will not be available"
+        return 1
+    fi
+}
+
+# ---------------------------------------------------------------------------
 # AUR / extra-source installs
 # ---------------------------------------------------------------------------
 
@@ -213,6 +246,7 @@ export -f pkg_remove
 export -f pkg_update
 export -f pkg_repo_exists
 export -f pkg_copr_enable
+export -f pkg_ensure_aur_helper
 export -f pkg_aur_install
 
 # Auto-detect on source so KITBASH_PKG_MANAGER is always set after sourcing.

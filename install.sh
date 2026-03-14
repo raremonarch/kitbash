@@ -3,7 +3,7 @@
 repo_name=kitbash
 gh_username=raremonarch
 
-target_dir="$HOME/code/raremonarch/$repo_name"
+target_dir="$HOME/code/$gh_username/$repo_name"
 alias_name="${KITBASH_ALIAS:-kit}"
 
 # Function to add or update kit alias in .bashrc
