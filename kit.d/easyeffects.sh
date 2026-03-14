@@ -21,7 +21,7 @@ fi
 
 # Install EasyEffects and LSP plugins (high-quality compressor, EQ, etc.)
 run_with_progress "installing EasyEffects" \
-    sudo dnf install -y easyeffects lsp-plugins-lv2
+    pkg_install easyeffects lsp-plugins-lv2
 
 if ! command -v easyeffects >/dev/null 2>&1; then
     log_error "EasyEffects installation failed"

@@ -11,7 +11,7 @@ log_info "Installing ImageMagick"
 # Check if already installed
 if command -v magick >/dev/null 2>&1 || command -v convert >/dev/null 2>&1; then
     log_success "ImageMagick is already installed"
-    exit 0
+    return 0
 fi
 
 # Package is 'imagemagick' on Arch, 'ImageMagick' on Fedora
@@ -24,5 +24,5 @@ if command -v magick >/dev/null 2>&1 || command -v convert >/dev/null 2>&1; then
     log_success "ImageMagick installed successfully"
 else
     log_error "ImageMagick installation verification failed"
-    exit $KIT_EXIT_MODULE_FAILED
+    return $KIT_EXIT_MODULE_FAILED
 fi

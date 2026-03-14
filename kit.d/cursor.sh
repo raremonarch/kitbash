@@ -15,8 +15,8 @@ if [ ! -d "/usr/share/icons/$CURSOR_THEME" ] && [ ! -d "$HOME/.local/share/icons
     log_debug "Checking paths: /usr/share/icons/$CURSOR_THEME and $HOME/.local/share/icons/$CURSOR_THEME"
 
     # Install breeze cursor theme package
-    if ! run_with_progress "installing breeze cursor theme" sudo dnf install -y breeze-cursor-theme; then
-        log_error "Failed to install breeze cursor theme via dnf"
+    if ! run_with_progress "installing breeze cursor theme" pkg_install breeze-cursor-theme; then
+        log_error "Failed to install breeze cursor theme"
         log_error "Available cursor themes in /usr/share/icons/:"
         ls /usr/share/icons/ | grep -i cursor || log_error "No cursor themes found"
         exit 1

@@ -507,7 +507,12 @@ configure_niri_desktop() {
 
     # Niri uses swaybg for wallpapers
     if ! command -v swaybg >/dev/null 2>&1; then
-        log_warning "swaybg not installed — run: pkg_install swaybg"
+        log_step "installing swaybg"
+        pkg_install swaybg
+    fi
+
+    if ! command -v swaybg >/dev/null 2>&1; then
+        log_warning "swaybg not available — skipping desktop wallpaper"
         return 1
     fi
 

@@ -27,19 +27,19 @@ if ! command -v "$TERMINAL_APP" >/dev/null 2>&1; then
     # Install based on terminal type
     case "$TERMINAL_APP" in
         alacritty)
-            if ! run_with_progress "installing Alacritty" sudo dnf install -y alacritty; then
+            if ! run_with_progress "installing Alacritty" pkg_install alacritty; then
                 log_error "Failed to install Alacritty"
                 exit $KIT_EXIT_MODULE_FAILED
             fi
             ;;
         kitty)
-            if ! run_with_progress "installing Kitty" sudo dnf install -y kitty; then
+            if ! run_with_progress "installing Kitty" pkg_install kitty; then
                 log_error "Failed to install Kitty"
                 exit $KIT_EXIT_MODULE_FAILED
             fi
             ;;
         gnome-terminal)
-            if ! run_with_progress "installing GNOME Terminal" sudo dnf install -y gnome-terminal; then
+            if ! run_with_progress "installing GNOME Terminal" pkg_install gnome-terminal; then
                 log_error "Failed to install GNOME Terminal"
                 exit $KIT_EXIT_MODULE_FAILED
             fi

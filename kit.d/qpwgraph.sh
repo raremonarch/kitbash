@@ -14,7 +14,7 @@ if command -v qpwgraph >/dev/null 2>&1; then
 fi
 
 run_with_progress "installing qpwgraph" \
-    sudo dnf install -y qpwgraph
+    pkg_install qpwgraph
 
 if command -v qpwgraph >/dev/null 2>&1; then
     log_success "qpwgraph installed successfully"
