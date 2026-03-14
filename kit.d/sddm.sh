@@ -1,30 +1,42 @@
 #!/bin/bash
 
 # Module: sddm.sh
-# Purpose: Configure SDDM login manager
+# Purpose: Install and configure SDDM login manager
 # Tier: 2 (Core Desktop Environment)
-# Description: Configures SDDM display manager theme and session settings
-# Installs: none (configuration only)
+# Description: SDDM display manager with Wayland support
+# Installs: sddm
 
-# Exit on any error
-set -e
+log_info "Setting up SDDM login manager"
 
-log_info "Configuring SDDM login manager"
+# Install if not present
+if ! command -v sddm >/dev/null 2>&1; then
+    if ! run_with_progress "installing SDDM" pkg_install sddm; then
+        log_error "Failed to install SDDM"
+        exit $KIT_EXIT_MODULE_FAILED
+    fi
+fi
 
-# Configure SDDM to use the custom theme (if available)
+# Enable sddm.service so it starts on boot
+if ! systemctl is-enabled sddm >/dev/null 2>&1; then
+    if ! run_with_progress "enabling SDDM service" sudo systemctl enable sddm; then
+        log_error "Failed to enable SDDM service"
+        exit $KIT_EXIT_MODULE_FAILED
+    fi
+fi
+
+# Optional config — only applies if /etc/sddm.conf exists
 SDDM_CONFIG="/etc/sddm.conf"
 if [ -f "$SDDM_CONFIG" ]; then
-    # Ensure SDDM uses the custom theme
     if [ -d "/usr/share/sddm/themes/custom" ] && ! sudo grep -q "^Current=custom" "$SDDM_CONFIG"; then
         log_step "setting custom theme"
         sudo sed -i 's|#Current=.*|Current=custom|; s|^Current=.*|Current=custom|' "$SDDM_CONFIG"
     fi
 
-    # Ensure SDDM uses default Wayland mode (comment out any X11 override)
     if sudo grep -q "^DisplayServer=x11" "$SDDM_CONFIG"; then
         log_step "switching to Wayland mode"
         sudo sed -i 's|^DisplayServer=x11|# DisplayServer=wayland|' "$SDDM_CONFIG"
     fi
 fi
 
-log_success "SDDM configured"
+log_success "SDDM installed and enabled"
+log_info "Note: SDDM will start on next boot. To start now: sudo systemctl start sddm"

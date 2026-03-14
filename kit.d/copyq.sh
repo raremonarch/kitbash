@@ -14,8 +14,8 @@ if command -v copyq >/dev/null 2>&1; then
     exit 0
 fi
 
-# Install CopyQ from Fedora repositories
-if ! run_with_progress "installing CopyQ" sudo dnf install -y copyq; then
+# Install CopyQ
+if ! run_with_progress "installing CopyQ" pkg_install copyq; then
     log_error "Failed to install CopyQ"
     exit $KIT_EXIT_MODULE_FAILED
 fi
