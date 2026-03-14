@@ -57,16 +57,16 @@ main_setup() {
     _packages="$KITBASH_PACKAGES"
     _desktop=$(echo $XDG_CURRENT_DESKTOP)
 
-    # Load remaining library functions
+    # Initialize logging first — pkg.sh calls log_debug on source
     source "$KITBASH_LIB/logging.sh"
+    log_init
+
+    # Load remaining library functions
     source "$KITBASH_LIB/pkg.sh"
     source "$KITBASH_LIB/validation.sh"
     source "$KITBASH_LIB/module-runner.sh"
     source "$KITBASH_LIB/setup-functions.sh"
     source "$KITBASH_LIB/state.sh"
-
-    # Initialize logging and state tracking
-    log_init
 
     # jq is required for state tracking; install now if missing
     if ! command -v jq >/dev/null 2>&1; then
