@@ -163,10 +163,15 @@ fi
 
 log_debug "Wallpaper targets: ${_wallpaper_targets[*]}"
 
+# Ensure ImageMagick is available — needed for dimension detection and wallpaper splitting
+if ! command -v magick >/dev/null 2>&1; then
+    log_step "installing ImageMagick"
+    source "$KITBASH_MODULES/imagemagick.sh"
+fi
+
 # Check if ImageMagick is available for dimension detection
 if ! command -v magick >/dev/null 2>&1; then
-    log_warning "ImageMagick (magick command) not found. Cannot detect image dimensions."
-    log_warning "Install with: sudo dnf install ImageMagick"
+    log_warning "ImageMagick not found — cannot detect image dimensions"
     _is_dual_monitor=false
 else
     # Get image dimensions using ImageMagick
@@ -223,6 +228,9 @@ _system_split_0="$_system_wallpaper_dir/${_wallpaper_base}-0.${_wallpaper_ext}"
 _system_split_1="$_system_wallpaper_dir/${_wallpaper_base}-1.${_wallpaper_ext}"
 log_debug "System wallpaper paths: $_system_wallpaper, $_system_split_0, $_system_split_1"
 
+# Ensure system wallpaper directory exists (may not on a fresh Arch install)
+sudo mkdir -p "$_system_wallpaper_dir"
+
 # Copy original wallpaper to system directory (needed for all targets)
 if ! run_with_progress "copying wallpaper to system directory" sudo cp "$_wallpaper_path" "$_system_wallpaper"; then
     log_error "Failed to copy wallpaper to system directory"
@@ -240,7 +248,7 @@ if [ "$_is_dual_monitor" = true ] && [[ " ${_wallpaper_targets[*]} " == *" deskt
 
         # Check if ImageMagick is available
         if ! command -v magick >/dev/null 2>&1; then
-            log_error "ImageMagick (magick command) not found. Please install it: sudo dnf install ImageMagick"
+            log_error "ImageMagick not found — cannot split dual monitor wallpaper"
             exit 1
         fi
 
@@ -499,7 +507,7 @@ configure_niri_desktop() {
 
     # Niri uses swaybg for wallpapers
     if ! command -v swaybg >/dev/null 2>&1; then
-        log_warning "swaybg not installed. Install with: sudo dnf install swaybg"
+        log_warning "swaybg not installed — run: pkg_install swaybg"
         return 1
     fi
 

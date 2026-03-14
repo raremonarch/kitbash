@@ -14,7 +14,11 @@ if command -v magick >/dev/null 2>&1 || command -v convert >/dev/null 2>&1; then
     exit 0
 fi
 
-run_with_progress "installing ImageMagick" sudo dnf install -y ImageMagick
+# Package is 'imagemagick' on Arch, 'ImageMagick' on Fedora
+case "$KITBASH_DISTRO" in
+    arch) pkg_install imagemagick ;;
+    *)    pkg_install ImageMagick ;;
+esac
 
 if command -v magick >/dev/null 2>&1 || command -v convert >/dev/null 2>&1; then
     log_success "ImageMagick installed successfully"
