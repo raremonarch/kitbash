@@ -15,6 +15,18 @@ fi
 
 log_info "Installing fonts (primary: $PRIMARY_FONT)"
 
+# Ensure required tools are available
+for _tool in wget unzip fc-cache; do
+    if ! command -v "$_tool" >/dev/null 2>&1; then
+        case "$_tool" in
+            fc-cache) _pkg="$(pkg_name fontconfig)" ;;
+            *)        _pkg="$_tool" ;;
+        esac
+        log_step "installing missing dependency: $_pkg"
+        pkg_install "$_pkg"
+    fi
+done
+
 # Ensure fonts directory exists
 FONTS_DIR="$HOME/.local/share/fonts"
 log_debug "Fonts directory: $FONTS_DIR"

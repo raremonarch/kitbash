@@ -250,6 +250,7 @@ pkg_name() {
             case "$logical" in
                 breeze-cursors)         echo "breeze" ;;
                 imagemagick)            echo "imagemagick" ;;
+                fontconfig)             echo "fontconfig" ;;
                 *)                      echo "$logical" ;;
             esac
             ;;
@@ -257,6 +258,7 @@ pkg_name() {
             case "$logical" in
                 breeze-cursors)         echo "breeze-cursor-theme" ;;
                 imagemagick)            echo "ImageMagick" ;;
+                fontconfig)             echo "fontconfig" ;;
                 *)                      echo "$logical" ;;
             esac
             ;;
