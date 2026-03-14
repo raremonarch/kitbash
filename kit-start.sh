@@ -559,7 +559,7 @@ if is_kitbash_environment && [ $# -gt 0 ]; then
     # We have arguments and we're in an existing environment
     # Check if the first argument might be a module name or special command
     case "$1" in
-        "help"|"-h"|"--help")
+        "help"|"-h"|"--help"|"log")
             # These are valid run-setup commands, delegate to it
             source "$KITBASH_LIB/run-setup.sh"
             main_setup "$@"
