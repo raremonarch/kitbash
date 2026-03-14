@@ -4,7 +4,7 @@
 # Purpose: Install Waybar status bar for Wayland compositors
 # Tier: 2 (Core Desktop Environment)
 # Description: Highly customizable Wayland bar for Sway, Niri, and Hyprland
-# Installs: waybar, pacman-contrib (Arch only, for checkupdates)
+# Installs: waybar, wireplumber, pacman-contrib (Arch only, for checkupdates)
 
 log_info "Installing Waybar"
 
@@ -18,14 +18,18 @@ if ! run_with_progress "installing waybar" pkg_install waybar; then
     exit $KIT_EXIT_MODULE_FAILED
 fi
 
-if command -v waybar >/dev/null 2>&1; then
-    log_success "Waybar installed successfully"
-else
-    log_error "Waybar installation verification failed"
-    exit $KIT_EXIT_MODULE_FAILED
+if ! run_with_progress "installing wireplumber" pkg_install wireplumber; then
+    log_warning "Failed to install wireplumber (volume control may not work)"
 fi
 
 # On Arch: install pacman-contrib for checkupdates (used by waybar updates widget)
 if [ "$KITBASH_DISTRO" = "arch" ] && ! command -v checkupdates >/dev/null 2>&1; then
     run_with_progress "installing pacman-contrib" pkg_install pacman-contrib
+fi
+
+if command -v waybar >/dev/null 2>&1; then
+    log_success "Waybar installed successfully"
+else
+    log_error "Waybar installation verification failed"
+    exit $KIT_EXIT_MODULE_FAILED
 fi
