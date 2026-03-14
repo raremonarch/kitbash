@@ -14,17 +14,24 @@ if [ ! -d "/usr/share/icons/$CURSOR_THEME" ] && [ ! -d "$HOME/.local/share/icons
     log_step "cursor theme '$CURSOR_THEME' not found, installing"
     log_debug "Checking paths: /usr/share/icons/$CURSOR_THEME and $HOME/.local/share/icons/$CURSOR_THEME"
 
-    # Install breeze cursor theme package
-    if ! run_with_progress "installing breeze cursor theme" pkg_install breeze-cursor-theme; then
-        log_error "Failed to install breeze cursor theme"
+    # Package name differs by distro: Arch ships cursors in 'breeze', Fedora has 'breeze-cursor-theme'
+    case "$KITBASH_DISTRO" in
+        arch) _cursor_pkg="breeze" ;;
+        *)    _cursor_pkg="breeze-cursor-theme" ;;
+    esac
+
+    if ! run_with_progress "installing breeze cursor theme" pkg_install "$_cursor_pkg"; then
+        log_error "Failed to install cursor theme package '$_cursor_pkg'"
         log_error "Available cursor themes in /usr/share/icons/:"
-        ls /usr/share/icons/ | grep -i cursor || log_error "No cursor themes found"
+        ls /usr/share/icons/ 2>/dev/null | grep -iv default || log_error "No cursor themes found"
         exit 1
     fi
 
     # Verify installation worked
     if [ ! -d "/usr/share/icons/$CURSOR_THEME" ] && [ ! -d "$HOME/.local/share/icons/$CURSOR_THEME" ]; then
-        log_error "Cursor theme '$CURSOR_THEME' still not found after installation attempt"
+        log_error "Cursor theme '$CURSOR_THEME' still not found after installing '$_cursor_pkg'"
+        log_error "Available themes in /usr/share/icons/:"
+        ls /usr/share/icons/ 2>/dev/null || true
         exit 1
     fi
 fi
