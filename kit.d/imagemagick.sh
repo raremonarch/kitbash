@@ -14,11 +14,7 @@ if command -v magick >/dev/null 2>&1 || command -v convert >/dev/null 2>&1; then
     return 0
 fi
 
-# Package is 'imagemagick' on Arch, 'ImageMagick' on Fedora
-case "$KITBASH_DISTRO" in
-    arch) pkg_install imagemagick ;;
-    *)    pkg_install ImageMagick ;;
-esac
+pkg_install "$(pkg_name imagemagick)"
 
 if command -v magick >/dev/null 2>&1 || command -v convert >/dev/null 2>&1; then
     log_success "ImageMagick installed successfully"

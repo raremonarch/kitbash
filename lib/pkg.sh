@@ -236,6 +236,37 @@ pkg_aur_install() {
 }
 
 # ---------------------------------------------------------------------------
+# Package name translation
+# ---------------------------------------------------------------------------
+
+# Resolve a logical package name to the distro-specific package name.
+# Add entries here whenever a package has different names across distros.
+# Usage: pkg_install "$(pkg_name breeze-cursors)"
+#        pkg_name nerd-fonts-jetbrains-mono   # returns distro-correct name
+pkg_name() {
+    local logical="$1"
+    case "$KITBASH_DISTRO" in
+        arch)
+            case "$logical" in
+                breeze-cursors)         echo "breeze" ;;
+                imagemagick)            echo "imagemagick" ;;
+                *)                      echo "$logical" ;;
+            esac
+            ;;
+        fedora)
+            case "$logical" in
+                breeze-cursors)         echo "breeze-cursor-theme" ;;
+                imagemagick)            echo "ImageMagick" ;;
+                *)                      echo "$logical" ;;
+            esac
+            ;;
+        *)
+            echo "$logical"
+            ;;
+    esac
+}
+
+# ---------------------------------------------------------------------------
 # Exports
 # ---------------------------------------------------------------------------
 
@@ -248,6 +279,7 @@ export -f pkg_repo_exists
 export -f pkg_copr_enable
 export -f pkg_ensure_aur_helper
 export -f pkg_aur_install
+export -f pkg_name
 
 # Auto-detect on source so KITBASH_PKG_MANAGER is always set after sourcing.
 pkg_detect
