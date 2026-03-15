@@ -24,15 +24,18 @@ if ! systemctl is-enabled sddm >/dev/null 2>&1; then
     fi
 fi
 
-# Deploy themes from dotfiles to system theme directory
+# Symlink themes from dotfiles into system theme directory
 DOTFILES_THEMES="$HOME/system-configs/sddm/themes"
 SYSTEM_THEMES="/usr/share/sddm/themes"
 if [ -d "$DOTFILES_THEMES" ]; then
     for theme_dir in "$DOTFILES_THEMES"/*/; do
         theme_name=$(basename "$theme_dir")
-        log_step "deploying SDDM theme: $theme_name"
-        sudo mkdir -p "$SYSTEM_THEMES/$theme_name"
-        sudo cp -r "$theme_dir"* "$SYSTEM_THEMES/$theme_name/"
+        if [ ! -e "$SYSTEM_THEMES/$theme_name" ]; then
+            log_step "linking SDDM theme: $theme_name"
+            sudo ln -s "$theme_dir" "$SYSTEM_THEMES/$theme_name"
+        else
+            log_debug "SDDM theme already present: $theme_name"
+        fi
     done
 fi
 
