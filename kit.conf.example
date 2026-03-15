@@ -56,6 +56,7 @@ _qpwgraph=false                      # Install qpwgraph PipeWire audio routing e
 _sddm=false                          # Configure SDDM login manager
 _steam=false                         # Install Steam gaming platform with RPM Fusion
 _synology=true                      # Install Synology Drive
+_thunar=false                        # Install Thunar file manager
 _vscode=true                        # Install VS Code
 _waybar=true                         # Install Waybar status bar
 _zoom=false                          # Install Zoom video conferencing
