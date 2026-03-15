@@ -8,12 +8,10 @@
 
 log_info "Setting up SDDM login manager"
 
-# Install if not present
-if ! command -v sddm >/dev/null 2>&1; then
-    if ! run_with_progress "installing SDDM" pkg_install sddm; then
-        log_error "Failed to install SDDM"
-        exit $KIT_EXIT_MODULE_FAILED
-    fi
+# Install sddm
+if ! run_with_progress "installing SDDM" pkg_install sddm; then
+    log_error "Failed to install SDDM"
+    exit $KIT_EXIT_MODULE_FAILED
 fi
 
 # Enable sddm.service so it starts on boot
@@ -22,6 +20,13 @@ if ! systemctl is-enabled sddm >/dev/null 2>&1; then
         log_error "Failed to enable SDDM service"
         exit $KIT_EXIT_MODULE_FAILED
     fi
+fi
+
+# Allow the sddm user to traverse the home directory to reach theme symlinks
+# 711 lets other users enter (but not list) the home directory
+if [ "$(stat -c '%a' "$HOME")" = "700" ]; then
+    log_step "setting home directory to 711 for sddm theme access"
+    chmod 711 "$HOME"
 fi
 
 # Symlink themes from dotfiles into system theme directory
@@ -35,6 +40,18 @@ if [ -d "$DOTFILES_THEMES" ]; then
             sudo ln -s "$theme_dir" "$SYSTEM_THEMES/$theme_name"
         else
             log_debug "SDDM theme already present: $theme_name"
+        fi
+
+        # Install dependencies declared in metadata.desktop
+        metadata="$theme_dir/metadata.desktop"
+        if [ -f "$metadata" ]; then
+            dep_key="X-KitDependencies-$KITBASH_PKG_MANAGER"
+            deps=$(grep "^$dep_key=" "$metadata" | cut -d= -f2-)
+            if [ -n "$deps" ]; then
+                log_step "installing theme dependencies for $theme_name: $deps"
+                # shellcheck disable=SC2086
+                run_with_progress "installing $theme_name dependencies" pkg_install $deps
+            fi
         fi
     done
 fi
@@ -68,6 +85,22 @@ if [ -f "$THEME_CONF" ]; then
         log_step "patching SDDM theme accent color: $_accent_color"
         sudo sed -i "s|^AccentColor=.*|AccentColor=$_accent_color|" "$THEME_CONF"
     fi
+fi
+
+# Deploy sddm.conf.d files from dotfiles to /etc/sddm.conf.d/
+DOTFILES_CONFD="$HOME/system-configs/sddm/sddm.conf.d"
+if [ -d "$DOTFILES_CONFD" ]; then
+    sudo mkdir -p /etc/sddm.conf.d
+    for conf_file in "$DOTFILES_CONFD"/*.conf; do
+        [ -f "$conf_file" ] || continue
+        dest="/etc/sddm.conf.d/$(basename "$conf_file")"
+        if [ ! -e "$dest" ]; then
+            log_step "linking SDDM config: $(basename "$conf_file")"
+            sudo ln -s "$conf_file" "$dest"
+        else
+            log_debug "SDDM config already present: $(basename "$conf_file")"
+        fi
+    done
 fi
 
 # Optional config — only applies if /etc/sddm.conf exists
