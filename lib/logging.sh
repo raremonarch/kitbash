@@ -126,6 +126,9 @@ run_with_progress() {
     ) &
     spinner_pid=$!
 
+    # Kill spinner and clean up line on interrupt
+    trap "kill \$spinner_pid 2>/dev/null; wait \$spinner_pid 2>/dev/null; printf '\b\n'; trap - INT TERM; return 130" INT TERM
+
     # Capture both stdout and stderr
     if output=$("$@" 2>&1); then
         exit_code=0
@@ -145,6 +148,7 @@ run_with_progress() {
         [ -n "$output" ] && log_debug "Output: $output"
     fi
 
+    trap - INT TERM
     return $exit_code
 }
 

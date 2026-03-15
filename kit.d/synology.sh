@@ -1,32 +1,49 @@
 #!/bin/bash
 
 # Module: synology.sh
-# Purpose: Install Synology Drive client from COPR repository
+# Purpose: Install Synology Drive client
 # Tier: 5 (Applications)
-# Description: Synology Drive client installed via COPR repository
-# Installs: synology-drive-noextra
-
-# Exit on any error
-set -e
+# Description: Synology Drive client (COPR on Fedora, AUR on Arch)
+# Installs: synology-drive-noextra (Fedora), synology-drive (Arch)
 
 log_info "Installing Synology Drive"
 
-# Check if Synology Drive is already installed
+# Check if already installed
 if command -v synology-drive >/dev/null 2>&1; then
-    log_step "already installed"
-    exit 0
+    log_success "Synology Drive is already installed"
+    return 0
 fi
 
-# Add Synology Drive COPR repository
-if ! run_with_progress "adding Synology Drive COPR repository" sudo dnf copr enable emixampp/synology-drive -y; then
-    log_error "Failed to enable COPR repository"
-    exit 1
-fi
+case "$KITBASH_PKG_MANAGER" in
+    dnf)
+        if ! run_with_progress "adding Synology Drive COPR repository" \
+            pkg_copr_enable emixampp/synology-drive; then
+            log_error "Failed to enable COPR repository"
+            return $KIT_EXIT_MODULE_FAILED
+        fi
 
-# Install Synology Drive
-if ! run_with_progress "installing Synology Drive package" sudo dnf install -y synology-drive-noextra; then
-    log_error "Failed to install Synology Drive"
-    exit 1
-fi
+        if ! run_with_progress "installing Synology Drive" \
+            pkg_install synology-drive-noextra; then
+            log_error "Failed to install Synology Drive"
+            return $KIT_EXIT_MODULE_FAILED
+        fi
+        ;;
+    pacman)
+        log_info "Installing Synology Drive from AUR (this may take a few minutes)..."
+        if ! pkg_aur_install synology-drive; then
+            log_error "Failed to install Synology Drive from AUR"
+            return $KIT_EXIT_MODULE_FAILED
+        fi
+        ;;
+    *)
+        log_error "Synology Drive installation not supported on $KITBASH_PKG_MANAGER"
+        return $KIT_EXIT_MODULE_FAILED
+        ;;
+esac
 
-log_success "Synology Drive installed successfully"
+if command -v synology-drive >/dev/null 2>&1; then
+    log_success "Synology Drive installed successfully"
+else
+    log_error "Synology Drive installation verification failed"
+    return $KIT_EXIT_MODULE_FAILED
+fi
