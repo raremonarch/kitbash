@@ -39,6 +39,37 @@ if [ -d "$DOTFILES_THEMES" ]; then
     done
 fi
 
+# Patch system-specific values into theme.conf files
+THEME_CONF="$HOME/system-configs/sddm/themes/hyprlock-sddm-theme/theme.conf"
+if [ -f "$THEME_CONF" ]; then
+    # Patch wallpaper path from _wallpaper_definitions or direct path
+    if [ -n "${_wallpaper:-}" ]; then
+        # Resolve wallpaper to full system path
+        wallpaper_path=""
+        for def in "${_wallpaper_definitions[@]:-}"; do
+            name="${def%%:*}"
+            if [ "$name" = "$_wallpaper" ]; then
+                ext="${def##*.}"
+                wallpaper_path="/usr/share/backgrounds/wallpaper.$ext"
+                break
+            fi
+        done
+        # Fallback: treat _wallpaper as a direct path
+        [ -z "$wallpaper_path" ] && wallpaper_path="$_wallpaper"
+
+        if [ -n "$wallpaper_path" ]; then
+            log_step "patching SDDM theme wallpaper: $wallpaper_path"
+            sudo sed -i "s|^background=.*|background=$wallpaper_path|" "$THEME_CONF"
+        fi
+    fi
+
+    # Patch accent color from _accent_color
+    if [ -n "${_accent_color:-}" ]; then
+        log_step "patching SDDM theme accent color: $_accent_color"
+        sudo sed -i "s|^AccentColor=.*|AccentColor=$_accent_color|" "$THEME_CONF"
+    fi
+fi
+
 # Optional config — only applies if /etc/sddm.conf exists
 SDDM_CONFIG="/etc/sddm.conf"
 if [ -f "$SDDM_CONFIG" ]; then

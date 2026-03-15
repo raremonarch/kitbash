@@ -19,6 +19,9 @@ _editor='vim'           # Default editor (vim, nano, code, etc.)
 _wallpaper='neon-blue-circle'
 _wallpaper_targets=("desktop" "lock" "login")  # Where to apply wallpaper
 
+# System accent color (used by sddm theme and other components)
+_accent_color='#ca9ee6'              # Default purple — override per system
+
 # Cursor theme and size
 _cursor='breeze_cursors'             # Cursor theme name
 _cursor_size='20'                    # Cursor size in pixels
