@@ -29,6 +29,15 @@ case "$KITBASH_PKG_MANAGER" in
         fi
         ;;
     pacman)
+        # xwayland-satellite is required for Synology Drive on niri (X11-only Qt bundled)
+        if ! command -v xwayland-satellite >/dev/null 2>&1; then
+            log_info "Installing xwayland-satellite (required for X11 support in niri)..."
+            if ! pkg_aur_install xwayland-satellite; then
+                log_error "Failed to install xwayland-satellite"
+                return $KIT_EXIT_MODULE_FAILED
+            fi
+        fi
+
         log_info "Installing Synology Drive from AUR (this may take a few minutes)..."
         if ! pkg_aur_install synology-drive; then
             log_error "Failed to install Synology Drive from AUR"
