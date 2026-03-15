@@ -68,7 +68,7 @@ pkg_detect() {
     fi
 
     log_debug "Distro: $KITBASH_DISTRO  Package manager: $KITBASH_PKG_MANAGER"
-    [ -n "${KITBASH_AUR_HELPER:-}" ] && log_debug "AUR helper: $KITBASH_AUR_HELPER"
+    [ -n "${KITBASH_AUR_HELPER:-}" ] && log_debug "AUR helper: $KITBASH_AUR_HELPER" || true
 }
 
 # ---------------------------------------------------------------------------
