@@ -59,7 +59,10 @@ main_setup() {
 
     # Initialize logging first — pkg.sh calls log_debug on source
     source "$KITBASH_LIB/logging.sh"
-    log_init
+    case "${1:-}" in
+        help|-h|--help|log) ;;
+        *) log_init ;;
+    esac
 
     # Load remaining library functions
     source "$KITBASH_LIB/pkg.sh"

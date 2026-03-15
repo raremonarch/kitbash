@@ -18,10 +18,13 @@ _LOG_COLOR_GRAY='\033[0;90m'
 log_init() {
     mkdir -p "$(dirname "$LOG_FILE")"
     local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-    echo "========================================" > "$LOG_FILE"
-    echo "Setup Log - Started at $timestamp" >> "$LOG_FILE"
-    echo "========================================" >> "$LOG_FILE"
-    echo "" >> "$LOG_FILE"
+    {
+        echo ""
+        echo "========================================"
+        echo "Session started at $timestamp"
+        echo "========================================"
+        echo ""
+    } >> "$LOG_FILE"
 }
 
 # Internal function to write to log file
