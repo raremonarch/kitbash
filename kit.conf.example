@@ -37,6 +37,7 @@ _sudo_timeout=15
 # OPTIONAL MODULES (true/false)
 # ==============================================================================
 
+_brightnessctl=false                 # Install brightnessctl screen brightness control
 _claude_cli=false                    # Install Claude CLI (AI assistant)
 _discord=false                       # Install Discord chat client from RPM Fusion
 _dropbox=false                       # Install Dropbox desktop client
