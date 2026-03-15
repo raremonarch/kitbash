@@ -36,6 +36,12 @@ _font='AudioLink Mono'
 # Sudo timeout in minutes (-1 for no timeout until reboot, or number of minutes)
 _sudo_timeout=15
 
+# Hibernation via swapfile (ext4 only)
+_hibernate=false                     # Enable hibernation setup
+# _hibernate_swap_size=8192          # Swapfile size in MB (default: auto-match RAM)
+# _hibernate_swapfile=/swapfile      # Swapfile path (default: /swapfile)
+# _hibernate_boot_entry=/boot/loader/entries/arch.conf  # systemd-boot entry
+
 # ==============================================================================
 # OPTIONAL MODULES (true/false)
 # ==============================================================================
