@@ -24,14 +24,21 @@ if ! systemctl is-enabled sddm >/dev/null 2>&1; then
     fi
 fi
 
+# Deploy themes from dotfiles to system theme directory
+DOTFILES_THEMES="$HOME/system-configs/sddm/themes"
+SYSTEM_THEMES="/usr/share/sddm/themes"
+if [ -d "$DOTFILES_THEMES" ]; then
+    for theme_dir in "$DOTFILES_THEMES"/*/; do
+        theme_name=$(basename "$theme_dir")
+        log_step "deploying SDDM theme: $theme_name"
+        sudo mkdir -p "$SYSTEM_THEMES/$theme_name"
+        sudo cp -r "$theme_dir"* "$SYSTEM_THEMES/$theme_name/"
+    done
+fi
+
 # Optional config — only applies if /etc/sddm.conf exists
 SDDM_CONFIG="/etc/sddm.conf"
 if [ -f "$SDDM_CONFIG" ]; then
-    if [ -d "/usr/share/sddm/themes/custom" ] && ! sudo grep -q "^Current=custom" "$SDDM_CONFIG"; then
-        log_step "setting custom theme"
-        sudo sed -i 's|#Current=.*|Current=custom|; s|^Current=.*|Current=custom|' "$SDDM_CONFIG"
-    fi
-
     if sudo grep -q "^DisplayServer=x11" "$SDDM_CONFIG"; then
         log_step "switching to Wayland mode"
         sudo sed -i 's|^DisplayServer=x11|# DisplayServer=wayland|' "$SDDM_CONFIG"
