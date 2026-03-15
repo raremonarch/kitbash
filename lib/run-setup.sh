@@ -57,16 +57,18 @@ main_setup() {
     _packages="$KITBASH_PACKAGES"
     _desktop=$(echo $XDG_CURRENT_DESKTOP)
 
-    # Initialize logging first — pkg.sh calls log_debug on source
+    # Initialize logging; load pkg/validation only for real runs.
+    # pkg.sh and validation.sh emit log_debug on source, which would
+    # pollute the log when running help/log commands.
     source "$KITBASH_LIB/logging.sh"
     case "${1:-}" in
         help|-h|--help|log) ;;
-        *) log_init ;;
+        *)
+            log_init
+            source "$KITBASH_LIB/pkg.sh"
+            source "$KITBASH_LIB/validation.sh"
+            ;;
     esac
-
-    # Load remaining library functions
-    source "$KITBASH_LIB/pkg.sh"
-    source "$KITBASH_LIB/validation.sh"
     source "$KITBASH_LIB/module-runner.sh"
     source "$KITBASH_LIB/setup-functions.sh"
     source "$KITBASH_LIB/state.sh"
@@ -94,7 +96,10 @@ main_setup() {
     state_init
 
     # Validate preferences before any execution
-    validate_preferences "$1"
+    case "${1:-}" in
+        help|-h|--help|log) ;;
+        *) validate_preferences "$1" ;;
+    esac
 
     # Check if first argument matches a module name
     requested_module="$1"

@@ -24,7 +24,7 @@ log_init() {
         echo "Session started at $timestamp"
         echo "========================================"
         echo ""
-    } >> "$LOG_FILE"
+    } > "$LOG_FILE"
 }
 
 # Internal function to write to log file
