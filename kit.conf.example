@@ -43,32 +43,70 @@ _hibernate=false                     # Enable hibernation setup
 # _hibernate_boot_entry=/boot/loader/entries/arch.conf  # systemd-boot entry
 
 # ==============================================================================
-# OPTIONAL MODULES (true/false)
+# TIER 0: DOTFILES MANAGEMENT (runs first)
 # ==============================================================================
 
-_brightnessctl=false                 # Install brightnessctl screen brightness control
-_claude_cli=false                    # Install Claude CLI (AI assistant)
-_discord=false                       # Install Discord chat client from RPM Fusion
-_dropbox=false                       # Install Dropbox desktop client
-_dotfiles=true                      # Clone dotfiles repo (requires _dotfiles_repo)
-_docker=false                        # Install Docker
-_gnome_boxes=false                   # Install GNOME Boxes virtualization
-_google_chrome=true                 # Install Google Chrome
-_imagemagick=false                   # Install ImageMagick image manipulation tools
-_mounts=false                        # Configure network/local mounts
-_nordvpn=false                       # Install NordVPN client
-_obsidian=true                       # Install Obsidian markdown editor
-_ollama=false                        # Install Ollama AI runtime
-_easyeffects=false                   # Install EasyEffects microphone/audio processor (PipeWire)
-_qbittorrent=false                   # Install qBittorrent torrent client
-_qpwgraph=false                      # Install qpwgraph PipeWire audio routing editor
-_sddm=false                          # Configure SDDM login manager
-_steam=false                         # Install Steam gaming platform with RPM Fusion
-_synology=true                      # Install Synology Drive
-_thunar=false                        # Install Thunar file manager
-_vscode=true                        # Install VS Code
-_waybar=true                         # Install Waybar status bar
-_zoom=false                          # Install Zoom video conferencing
+_dotfiles=true                       # Clone dotfiles repo (requires _dotfiles_repo)
+
+# ==============================================================================
+# TIER 1: SYSTEM FUNDAMENTALS
+# ==============================================================================
+
+# (hostname, editor, sudo_timeout, jq are configured above or auto-enabled)
+
+# ==============================================================================
+# TIER 2: DESKTOP ENVIRONMENT
+# ==============================================================================
+
+_brightnessctl=false                 # Screen brightness control utility
+_greetd=false                        # greetd display manager with gtkgreet
+_hyprland=false                      # Hyprland dynamic tiling compositor
+_niri=false                          # Niri scrollable-tiling Wayland compositor
+_sddm=false                          # SDDM display manager with Wayland support
+_theme=false                         # Catppuccin Mocha GTK theme for dark mode
+_thunar=false                        # Lightweight GTK file manager (Xfce)
+_waybar=true                         # Wayland status bar (Sway, Niri, Hyprland)
+
+# ==============================================================================
+# TIER 3: PACKAGE REPOSITORIES
+# ==============================================================================
+
+_google_chrome=true                  # Google Chrome via official Google repository
+_vscode=true                         # VS Code via official Microsoft repository
+
+# ==============================================================================
+# TIER 4: CORE USER TOOLS
+# ==============================================================================
+
+_alacritty=false                     # Fast, GPU-accelerated terminal emulator
+_copyq=false                         # Advanced clipboard manager with history
+
+# ==============================================================================
+# TIER 5: APPLICATIONS
+# ==============================================================================
+
+_awscli=false                        # AWS CLI v2
+_claude_cli=false                    # Claude Code CLI (AI assistant)
+_discord=false                       # Discord chat and voice client
+_docker=false                        # Docker Engine with Compose plugin
+_dropbox=false                       # Dropbox desktop client
+_easyeffects=false                   # PipeWire audio processor with LV2 plugins
+_firefox=false                       # Firefox web browser
+_gnome_boxes=false                   # GNOME Boxes virtualization
+_imagemagick=false                   # ImageMagick image manipulation suite
+_nordvpn=false                       # NordVPN client
+_obsidian=true                       # Obsidian markdown knowledge base editor
+_ollama=false                        # Ollama AI model runtime
+_qpwgraph=false                      # PipeWire graph editor for audio routing
+_steam=false                         # Steam gaming platform
+_synology=true                       # Synology Drive client
+_zoom=false                          # Zoom video conferencing
+
+# ==============================================================================
+# TIER 6: SYSTEM SERVICES
+# ==============================================================================
+
+_mounts=false                        # Configure CIFS/NFS network and local mounts
 
 # ==============================================================================
 # DOTFILES REPOSITORY (only used if _dotfiles=true)
