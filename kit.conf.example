@@ -86,7 +86,7 @@ _copyq=false                         # Advanced clipboard manager with history
 # ==============================================================================
 
 _awscli=false                        # AWS CLI v2
-_claude_cli=false                    # Claude Code CLI (AI assistant)
+_claude=false                        # Claude Code CLI (AI assistant)
 _discord=false                       # Discord chat and voice client
 _docker=false                        # Docker Engine with Compose plugin
 _dropbox=false                       # Dropbox desktop client

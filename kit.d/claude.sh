@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Module: claude_cli.sh
+# Module: claude.sh
 # Purpose: Install Claude Code CLI via npm
 # Tier: 5 (Applications)
 # Description: Official Claude Code CLI (claude-code npm package)
