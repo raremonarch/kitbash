@@ -64,7 +64,7 @@ run_module_with_defaults() {
         "font") setup_font ;;
         *)
             log_info "Running module: $module_name"
-            if (source "$script_file"); then
+            if (set -- ; source "$script_file"); then
                 log_success "Module '$module_name' completed"
                 return 0
             else
