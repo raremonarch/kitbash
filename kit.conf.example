@@ -97,8 +97,11 @@ _imagemagick=false                   # ImageMagick image manipulation suite
 _nordvpn=false                       # NordVPN client
 _obsidian=true                       # Obsidian markdown knowledge base editor
 _ollama=false                        # Ollama AI model runtime
+_moonlight=false                     # Moonlight streaming client (connects to Sunshine hosts)
 _qpwgraph=false                      # PipeWire graph editor for audio routing
+_remmina=false                       # Remmina remote desktop client (RDP, VNC, SSH)
 _steam=false                         # Steam gaming platform
+_sunshine=false                      # Sunshine self-hosted streaming server (Wayland-compatible)
 _synology=true                       # Synology Drive client
 _zoom=false                          # Zoom video conferencing
 
