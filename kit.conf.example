@@ -19,6 +19,7 @@ _notifications='mako'        # Notification daemon:   mako
 _screen_locker='hyprlock'    # Screen locker:         hyprlock
 _idle_daemon='hypridle'      # Idle management:       hypridle
 _bar='waybar'                # Status bar:            waybar
+_launcher='rofi'             # Application launcher:  rofi
 _file_manager='thunar'       # File manager:          thunar
 
 # ==============================================================================
