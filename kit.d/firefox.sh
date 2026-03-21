@@ -2,7 +2,7 @@
 
 # Module: firefox.sh
 # Purpose: Install Firefox web browser
-# Tier: 2 (Applications)
+# Tier: 4 (Applications)
 # Description: Firefox web browser from official repositories
 # Installs: firefox
 

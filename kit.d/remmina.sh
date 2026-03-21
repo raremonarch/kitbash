@@ -2,7 +2,7 @@
 
 # Module: remmina.sh
 # Purpose: Install Remmina remote desktop client
-# Tier: 5 (Applications)
+# Tier: 4 (Applications)
 # Description: Remmina remote desktop client with RDP, VNC, and SSH support
 # Installs: remmina
 

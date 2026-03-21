@@ -2,7 +2,7 @@
 
 # Module: alacritty.sh
 # Purpose: Install Alacritty terminal emulator
-# Tier: 3 (User Applications)
+# Tier: 3 (Core User Tools)
 # Description: Fast, GPU-accelerated terminal emulator
 # Installs: alacritty
 

@@ -2,7 +2,7 @@
 
 # Module: obsidian.sh
 # Purpose: Install Obsidian markdown editor
-# Tier: 5 (Applications)
+# Tier: 4 (Applications)
 # Description: Obsidian markdown knowledge base editor (AUR on Arch, AppImage on Fedora)
 # Installs: obsidian
 

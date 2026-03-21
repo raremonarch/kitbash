@@ -2,7 +2,7 @@
 
 # Module: cursor.sh
 # Purpose: Set up cursor theme for Wayland compositors
-# Tier: 2 (Core Desktop Environment)
+# Tier: 1 (System Fundamentals)
 # Description: Configures cursor theme for Wayland compositors via environment variables and GTK settings
 # Installs: breeze-cursor-theme (optional, if theme not already present)
 

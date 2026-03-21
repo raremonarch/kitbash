@@ -2,9 +2,11 @@
 
 # Module: hyprland.sh
 # Purpose: Install Hyprland dynamic tiling Wayland compositor and ecosystem tools
-# Tier: 2 (Core Desktop Environment)
+# Tier: 1 (System Fundamentals)
 # Description: Hyprland dynamic tiling compositor with lock, idle, wallpaper, and workspace plugins
 # Installs: hyprland, hyprlock, hypridle, hyprpaper, hyprland-plugin-hyprexpo
+# Config-var: _compositor
+# Config-match: hyprland
 
 log_info "Setting up Hyprland compositor and ecosystem"
 

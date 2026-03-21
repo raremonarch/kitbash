@@ -103,6 +103,13 @@ run_module_with_value() {
     esac
 }
 
+# Helper function to read a specific header value from a module script
+get_module_header() {
+    local script_file="$1"
+    local header_key="$2"
+    head -n 15 "$script_file" 2>/dev/null | grep "^# ${header_key}:" | head -n 1 | sed "s/^# ${header_key}:[[:space:]]*//"
+}
+
 # Function to process a single discovered module
 process_module() {
     local script_file="$1"
@@ -110,12 +117,24 @@ process_module() {
     local module_name
     local pref_var
     local pref_value
+    local config_match
     local execution_info
-    
-    module_name=$(basename "$script_file" .sh)
-    pref_var="_${module_name}"
 
-    log_debug "Checking module '$module_name' (pref: $pref_var)"
+    module_name=$(basename "$script_file" .sh)
+
+    # Read Config-var header if present, otherwise fall back to _modulename convention
+    local config_var_header
+    config_var_header=$(get_module_header "$script_file" "Config-var")
+    if [ -n "$config_var_header" ]; then
+        pref_var="$config_var_header"
+    else
+        pref_var="_${module_name}"
+    fi
+
+    # Read Config-match header if present (only run if config var equals this value)
+    config_match=$(get_module_header "$script_file" "Config-match")
+
+    log_debug "Checking module '$module_name' (pref: $pref_var${config_match:+, match: $config_match})"
 
     # If override arguments provided, use them instead of preferences
     if [ ${#override_args[@]} -gt 0 ]; then
@@ -139,15 +158,26 @@ process_module() {
         esac
         return 0
     fi
-    
+
     # Check if preference variable exists
     if ! declare -p "$pref_var" >/dev/null 2>&1; then
         log_debug "Module '$module_name': no preference variable '$pref_var' found, skipping"
         return $KIT_EXIT_MODULE_SKIPPED
     fi
-    
-    # Get preference value and execution info
+
+    # Get preference value
     pref_value="${!pref_var}"
+
+    # If Config-match is set, only run if the config value equals the match
+    if [ -n "$config_match" ]; then
+        if [ "$pref_value" != "$config_match" ]; then
+            log_debug "Module '$module_name': $pref_var='$pref_value' != '$config_match', skipping"
+            return $KIT_EXIT_MODULE_SKIPPED
+        fi
+        execute_module "$module_name" "$script_file" "boolean_true" ""
+        return $?
+    fi
+
     mapfile -t execution_info < <(get_module_execution_info "$module_name" "$pref_value")
 
     # Execute the module

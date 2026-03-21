@@ -2,7 +2,7 @@
 
 # Module: sunshine.sh
 # Purpose: Install Sunshine game/desktop streaming server
-# Tier: 5 (Applications)
+# Tier: 4 (Applications)
 # Description: Sunshine self-hosted streaming server (KMS capture, Wayland-compatible)
 # Installs: sunshine
 

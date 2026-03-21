@@ -2,7 +2,7 @@
 
 # Module: wlsunset.sh
 # Purpose: Install wlsunset day/night gamma adjustment for Wayland
-# Tier: 2 (Core Desktop Environment)
+# Tier: 4 (Applications)
 # Description: Adjusts color temperature based on time of day for Wayland compositors
 # Installs: wlsunset
 

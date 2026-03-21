@@ -2,9 +2,10 @@
 
 # Module: hypridle.sh
 # Purpose: Install and enable hypridle idle management daemon
-# Tier: 2 (Core Desktop Environment)
+# Tier: 1 (System Fundamentals)
 # Description: Compositor-agnostic idle daemon; locks screen and powers off monitors on inactivity
 # Installs: hypridle
+# Config-var: _idle_daemon
 
 log_info "Setting up hypridle idle management daemon"
 

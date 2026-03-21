@@ -2,9 +2,10 @@
 
 # Module: waybar.sh
 # Purpose: Install Waybar status bar for Wayland compositors
-# Tier: 2 (Core Desktop Environment)
+# Tier: 1 (System Fundamentals)
 # Description: Highly customizable Wayland bar for Sway, Niri, and Hyprland
 # Installs: waybar, wireplumber, pacman-contrib (Arch only, for checkupdates)
+# Config-var: _bar
 
 log_info "Installing Waybar"
 

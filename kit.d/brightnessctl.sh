@@ -2,7 +2,7 @@
 
 # Module: brightnessctl.sh
 # Purpose: Install brightnessctl for screen brightness control
-# Tier: 2 (Desktop Environment)
+# Tier: 4 (Applications)
 # Description: Screen brightness control utility for backlight management
 # Installs: brightnessctl
 

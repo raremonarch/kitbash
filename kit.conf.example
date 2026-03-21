@@ -8,8 +8,18 @@
 # ==============================================================================
 
 _hostname='desktop'     # System hostname
+_shell='zsh'            # Default shell:    zsh, bash
 _terminal='alacritty'   # Default terminal (alacritty, gnome-terminal, konsole, etc.)
 _editor='vim'           # Default editor (vim, nano, code, etc.)
+
+# Desktop environment
+_compositor='niri'           # Wayland compositor:    niri, hyprland
+_display_manager='sddm'      # Login manager:         sddm, greetd
+_notifications='mako'        # Notification daemon:   mako
+_screen_locker='hyprlock'    # Screen locker:         hyprlock
+_idle_daemon='hypridle'      # Idle management:       hypridle
+_bar='waybar'                # Status bar:            waybar
+_file_manager='thunar'       # File manager:          thunar
 
 # ==============================================================================
 # APPEARANCE
@@ -52,44 +62,28 @@ _dotfiles=true                       # Clone dotfiles repo (requires _dotfiles_r
 # TIER 1: SYSTEM FUNDAMENTALS
 # ==============================================================================
 
-# (hostname, editor, sudo_timeout, jq are configured above or auto-enabled)
+# (see required settings above)
 
 # ==============================================================================
-# TIER 2: DESKTOP ENVIRONMENT
-# ==============================================================================
-
-_brightnessctl=false                 # Screen brightness control utility
-_greetd=false                        # greetd display manager with gtkgreet
-_hyprland=false                      # Hyprland dynamic tiling compositor
-_hypridle=false                      # Idle daemon: lock screen + monitors off on inactivity
-_hyprlock=false                      # Wayland screen locker (works with Hyprland, Niri, Sway)
-_mako=false                          # Lightweight Wayland notification daemon
-_niri=false                          # Niri scrollable-tiling Wayland compositor
-_wlsunset=false                      # Day/night color temperature adjustment for Wayland
-_sddm=false                          # SDDM display manager with Wayland support
-_theme=false                         # Catppuccin Mocha GTK theme for dark mode
-_thunar=false                        # Lightweight GTK file manager (Xfce)
-_waybar=true                         # Wayland status bar (Sway, Niri, Hyprland)
-
-# ==============================================================================
-# TIER 3: PACKAGE REPOSITORIES
+# TIER 2: PACKAGE REPOSITORIES
 # ==============================================================================
 
 _google_chrome=true                  # Google Chrome via official Google repository
 _vscode=true                         # VS Code via official Microsoft repository
 
 # ==============================================================================
-# TIER 4: CORE USER TOOLS
+# TIER 3: CORE USER TOOLS
 # ==============================================================================
 
 _alacritty=false                     # Fast, GPU-accelerated terminal emulator
 _copyq=false                         # Advanced clipboard manager with history
 
 # ==============================================================================
-# TIER 5: APPLICATIONS
+# TIER 4: APPLICATIONS
 # ==============================================================================
 
 _awscli=false                        # AWS CLI v2
+_brightnessctl=false                 # Screen brightness control utility
 _claude=false                        # Claude Code CLI (AI assistant)
 _discord=false                       # Discord chat and voice client
 _docker=false                        # Docker Engine with Compose plugin
@@ -107,10 +101,12 @@ _remmina=false                       # Remmina remote desktop client (RDP, VNC, 
 _steam=false                         # Steam gaming platform
 _sunshine=false                      # Sunshine self-hosted streaming server (Wayland-compatible)
 _synology=true                       # Synology Drive client
+_theme=false                         # Catppuccin Mocha GTK theme for dark mode
+_wlsunset=false                      # Day/night color temperature adjustment
 _zoom=false                          # Zoom video conferencing
 
 # ==============================================================================
-# TIER 6: SYSTEM SERVICES
+# TIER 5: SYSTEM SERVICES
 # ==============================================================================
 
 _mounts=false                        # Configure CIFS/NFS network and local mounts

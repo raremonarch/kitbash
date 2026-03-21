@@ -2,7 +2,7 @@
 
 # Module: moonlight.sh
 # Purpose: Install Moonlight game/desktop streaming client
-# Tier: 5 (Applications)
+# Tier: 4 (Applications)
 # Description: Moonlight open-source streaming client for connecting to Sunshine hosts
 # Installs: moonlight-qt
 

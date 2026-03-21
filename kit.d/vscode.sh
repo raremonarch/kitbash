@@ -2,7 +2,7 @@
 
 # Module: vscode.sh
 # Purpose: Install Visual Studio Code editor
-# Tier: 3 (Package Repositories)
+# Tier: 2 (Package Repositories)
 # Description: Visual Studio Code editor (Microsoft repo on Fedora, official repos on Arch)
 # Installs: code
 

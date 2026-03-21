@@ -2,7 +2,7 @@
 
 # Module: discord.sh
 # Purpose: Install Discord chat client from RPM Fusion nonfree repository
-# Tier: 5 (Applications)
+# Tier: 4 (Applications)
 # Description: Discord chat and voice client installed via RPM Fusion
 # Installs: discord
 

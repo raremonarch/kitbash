@@ -2,7 +2,7 @@
 
 # Module: dropbox.sh
 # Purpose: Install Dropbox daemon (headless tarball install, no Nautilus dependency)
-# Tier: 5 (Applications)
+# Tier: 4 (Applications)
 # Description: Dropbox daemon and CLI installed from tarball (no Nautilus dependency)
 # Installs: dropboxd (tarball: ~/.dropbox-dist), dropbox CLI (~/.local/bin/dropbox), systemd user service: dropbox
 #

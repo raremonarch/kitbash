@@ -2,9 +2,10 @@
 
 # Module: mako.sh
 # Purpose: Install mako Wayland notification daemon
-# Tier: 2 (Core Desktop Environment)
+# Tier: 1 (System Fundamentals)
 # Description: Lightweight notification daemon for Wayland compositors
 # Installs: mako
+# Config-var: _notifications
 
 log_info "Setting up mako notification daemon"
 

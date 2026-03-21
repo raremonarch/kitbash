@@ -2,7 +2,7 @@
 
 # Module: steam.sh
 # Purpose: Install Steam gaming platform
-# Tier: 5 (Applications)
+# Tier: 4 (Applications)
 # Description: Steam gaming platform (multilib on Arch, RPM Fusion on Fedora)
 # Installs: steam
 

@@ -2,7 +2,7 @@
 
 # Module: font.sh
 # Purpose: Download and install fonts from URLs or local paths
-# Tier: 2 (Core Desktop Environment)
+# Tier: 1 (System Fundamentals)
 # Description: Downloads and installs fonts from URLs to ~/.local/share/fonts
 # Installs: none (fonts downloaded to ~/.local/share/fonts)
 

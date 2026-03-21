@@ -2,7 +2,7 @@
 
 # Module: imagemagick.sh
 # Purpose: Install ImageMagick image manipulation tools
-# Tier: 5 (Applications)
+# Tier: 4 (Applications)
 # Description: ImageMagick image manipulation and conversion suite
 # Installs: ImageMagick
 

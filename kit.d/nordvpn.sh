@@ -2,7 +2,7 @@
 
 # Module: nordvpn.sh
 # Purpose: Install NordVPN client
-# Tier: 5 (Applications)
+# Tier: 4 (Applications)
 # Description: NordVPN client installed via the official NordVPN install script
 # Installs: nordvpn
 

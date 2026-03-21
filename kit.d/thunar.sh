@@ -2,9 +2,10 @@
 
 # Module: thunar.sh
 # Purpose: Install Thunar file manager
-# Tier: 2 (Desktop Environment)
+# Tier: 1 (System Fundamentals)
 # Description: Lightweight GTK file manager from the Xfce project
 # Installs: thunar
+# Config-var: _file_manager
 
 log_info "Setting up Thunar"
 

@@ -2,9 +2,10 @@
 
 # Module: hyprlock.sh
 # Purpose: Install hyprlock screen locker
-# Tier: 2 (Core Desktop Environment)
+# Tier: 1 (System Fundamentals)
 # Description: GPU-accelerated screen locker for Wayland, works with Hyprland, Niri, and Sway
 # Installs: hyprlock
+# Config-var: _screen_locker
 
 log_info "Setting up hyprlock screen locker"
 

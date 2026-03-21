@@ -2,7 +2,7 @@
 
 # Module: easyeffects.sh
 # Purpose: Install EasyEffects audio processor and enable background service
-# Tier: 5 (Applications)
+# Tier: 4 (Applications)
 # Description: PipeWire audio processor with LV2 plugins for microphone and audio enhancement
 # Installs: easyeffects, lsp-plugins-lv2
 

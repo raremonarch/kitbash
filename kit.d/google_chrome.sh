@@ -2,7 +2,7 @@
 
 # Module: google_chrome.sh
 # Purpose: Install Google Chrome browser
-# Tier: 3 (Package Repositories)
+# Tier: 2 (Package Repositories)
 # Description: Google Chrome browser (AUR on Arch, official repo on Fedora)
 # Installs: google-chrome-stable
 

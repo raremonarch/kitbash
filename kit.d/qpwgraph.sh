@@ -2,7 +2,7 @@
 
 # Module: qpwgraph.sh
 # Purpose: Install qpwgraph PipeWire graph editor for audio/video routing
-# Tier: 5 (Applications)
+# Tier: 4 (Applications)
 # Description: PipeWire graph editor for visual audio and video routing
 # Installs: qpwgraph
 

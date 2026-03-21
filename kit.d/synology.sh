@@ -2,7 +2,7 @@
 
 # Module: synology.sh
 # Purpose: Install Synology Drive client
-# Tier: 5 (Applications)
+# Tier: 4 (Applications)
 # Description: Synology Drive client (COPR on Fedora, AUR on Arch)
 # Installs: synology-drive-noextra (Fedora), synology-drive (Arch)
 

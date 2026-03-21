@@ -2,7 +2,7 @@
 
 # Module: terminal.sh
 # Purpose: Set default terminal emulator
-# Tier: 2 (Core Desktop Environment)
+# Tier: 1 (System Fundamentals)
 # Description: Sets the default terminal emulator via update-alternatives, installing if needed
 # Installs: alacritty, kitty, or gnome-terminal (depending on config)
 

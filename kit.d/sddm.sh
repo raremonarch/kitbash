@@ -2,9 +2,11 @@
 
 # Module: sddm.sh
 # Purpose: Install and configure SDDM login manager
-# Tier: 2 (Core Desktop Environment)
+# Tier: 1 (System Fundamentals)
 # Description: SDDM display manager with Wayland support
 # Installs: sddm
+# Config-var: _display_manager
+# Config-match: sddm
 
 log_info "Setting up SDDM login manager"
 

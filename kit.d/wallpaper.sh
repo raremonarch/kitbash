@@ -2,7 +2,7 @@
 
 # Module: wallpaper.sh
 # Purpose: Download and configure wallpapers for desktop/lock/login
-# Tier: 2 (Core Desktop Environment)
+# Tier: 1 (System Fundamentals)
 # Description: Downloads wallpapers from URLs and applies them to desktop, lock screen, and login
 # Installs: none (wallpapers downloaded to ~/Pictures/wallpapers)
 
