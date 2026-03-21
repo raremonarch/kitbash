@@ -65,6 +65,8 @@ _dotfiles=true                       # Clone dotfiles repo (requires _dotfiles_r
 
 # (see required settings above)
 
+_openssh=true                        # OpenSSH client tools (ssh, ssh-keygen, scp)
+
 # ==============================================================================
 # TIER 2: PACKAGE REPOSITORIES
 # ==============================================================================

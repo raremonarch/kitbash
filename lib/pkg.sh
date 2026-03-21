@@ -251,6 +251,7 @@ pkg_name() {
                 breeze-cursors)         echo "breeze" ;;
                 imagemagick)            echo "imagemagick" ;;
                 fontconfig)             echo "fontconfig" ;;
+                openssh)                echo "openssh" ;;
                 *)                      echo "$logical" ;;
             esac
             ;;
@@ -259,6 +260,7 @@ pkg_name() {
                 breeze-cursors)         echo "breeze-cursor-theme" ;;
                 imagemagick)            echo "ImageMagick" ;;
                 fontconfig)             echo "fontconfig" ;;
+                openssh)                echo "openssh-clients" ;;
                 *)                      echo "$logical" ;;
             esac
             ;;
