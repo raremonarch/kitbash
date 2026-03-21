@@ -18,7 +18,7 @@ if [ ! -d "/usr/share/icons/$CURSOR_THEME" ] && [ ! -d "$HOME/.local/share/icons
         log_error "Failed to install cursor theme package '$(pkg_name breeze-cursors)'"
         log_error "Available cursor themes in /usr/share/icons/:"
         ls /usr/share/icons/ 2>/dev/null | grep -iv default || log_error "No cursor themes found"
-        exit 1
+        return 1
     fi
 
     # Verify installation worked
@@ -26,7 +26,7 @@ if [ ! -d "/usr/share/icons/$CURSOR_THEME" ] && [ ! -d "$HOME/.local/share/icons
         log_error "Cursor theme '$CURSOR_THEME' still not found after installing '$_cursor_pkg'"
         log_error "Available themes in /usr/share/icons/:"
         ls /usr/share/icons/ 2>/dev/null || true
-        exit 1
+        return 1
     fi
 fi
 

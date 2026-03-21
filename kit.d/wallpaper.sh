@@ -9,7 +9,7 @@
 # Check if wallpaper path is provided as first parameter
 if [ -z "$1" ]; then
     log_error "No wallpaper path provided. Usage: $0 <wallpaper_path_or_name>"
-    exit 1
+    return 1
 fi
 
 _wallpaper_input="$1"
@@ -90,11 +90,11 @@ else
                 log_debug "Downloaded to: $_wallpaper_source"
             else
                 log_error "Download succeeded but file not found: $_wallpaper_source"
-                exit 1
+                return 1
             fi
         else
             log_error "Failed to download wallpaper"
-            exit 1
+            return 1
         fi
     else
         log_error "'$_wallpaper_input' is not a valid file path or predefined wallpaper name"
@@ -112,14 +112,14 @@ else
             log_error "    \"name:https://example.com/wallpaper.jpg\""
             log_error "  )"
         fi
-        exit 1
+        return 1
     fi
 fi
 
 # Final check if wallpaper source file exists
 if [ ! -f "$_wallpaper_source" ]; then
     log_error "Wallpaper file '$_wallpaper_source' not found"
-    exit 1
+    return 1
 fi
 
 # Normalize: Copy/move source to ~/wallpaper.(ext) for consistent naming
@@ -130,7 +130,7 @@ _wallpaper_path="$HOME/wallpaper.$_source_ext"
 if [ "$_wallpaper_source" != "$_wallpaper_path" ]; then
     if ! run_with_progress "normalizing wallpaper to ~/wallpaper.$_source_ext" cp "$_wallpaper_source" "$_wallpaper_path"; then
         log_error "Failed to normalize wallpaper"
-        exit 1
+        return 1
     fi
 fi
 
@@ -146,7 +146,7 @@ if [ -f "$KITBASH_CONFIG" ]; then
 else
     log_error "Could not find kit.conf - required for wallpaper definitions"
     log_error "Please ensure kit.conf exists in your kitbash root directory"
-    exit 1
+    return 1
 fi
 
 # Verify required variables are loaded
@@ -234,7 +234,7 @@ sudo mkdir -p "$_system_wallpaper_dir"
 # Copy original wallpaper to system directory (needed for all targets)
 if ! run_with_progress "copying wallpaper to system directory" sudo cp "$_wallpaper_path" "$_system_wallpaper"; then
     log_error "Failed to copy wallpaper to system directory"
-    exit 1
+    return 1
 fi
 
 # Handle dual monitor wallpaper splitting if needed for desktop target
@@ -249,18 +249,18 @@ if [ "$_is_dual_monitor" = true ] && [[ " ${_wallpaper_targets[*]} " == *" deskt
         # Check if ImageMagick is available
         if ! command -v magick >/dev/null 2>&1; then
             log_error "ImageMagick not found — cannot split dual monitor wallpaper"
-            exit 1
+            return 1
         fi
 
         if ! run_with_progress "splitting wallpaper into dual monitor versions" sudo magick "$_system_wallpaper" -crop 50%x100% +repage +adjoin "${_system_wallpaper_dir}/${_wallpaper_base}-%d.${_wallpaper_ext}"; then
             log_error "Failed to split wallpaper"
-            exit 1
+            return 1
         fi
 
         # Verify split files were created
         if [ ! -f "$_system_split_0" ] || [ ! -f "$_system_split_1" ]; then
             log_error "Split wallpaper files not created properly"
-            exit 1
+            return 1
         fi
     else
         log_debug "Split wallpapers already exist in system directory"
@@ -664,4 +664,4 @@ if [[ " ${_wallpaper_targets[*]} " == *" desktop "* ]] || [[ " ${_wallpaper_targ
 fi
 
 log_success "Wallpaper configured successfully"
-exit 0
+return 0

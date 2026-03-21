@@ -57,7 +57,7 @@ prompt_yes_no() {
 set -eo pipefail  # Exit on error, pipe failures (nounset disabled for debugging)
 
 # Default configuration (can be overridden by user input)
-DEFAULT_REPO_OWNER="daevski"
+DEFAULT_REPO_OWNER="raremonarch"
 DEFAULT_REPO_NAME="dotfiles"
 DEFAULT_BRANCH="main"
 DOTFILES_DIR="$KITBASH_ROOT/dotfiles"
@@ -524,6 +524,15 @@ main() {
             exit 0
         fi
         echo ""
+    fi
+
+    # Write the gathered repo URL into kit.conf so the dotfiles module uses it
+    if [ -f "$KITBASH_ROOT/kit.conf" ] && [ -n "$REPO_URL" ]; then
+        if grep -q "^_dotfiles_repo=" "$KITBASH_ROOT/kit.conf"; then
+            sed -i "s|^_dotfiles_repo=.*|_dotfiles_repo=\"$REPO_URL\"|" "$KITBASH_ROOT/kit.conf"
+        else
+            echo "_dotfiles_repo=\"$REPO_URL\"" >> "$KITBASH_ROOT/kit.conf"
+        fi
     fi
 
     # Run setup steps

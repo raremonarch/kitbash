@@ -6,8 +6,13 @@
 # Description: Manages $HOME as a git repository for dotfiles tracking
 # Installs: none (git configuration only)
 
-DOTFILES_REPO="${_dotfiles_repo:-https://github.com/daevski/dotfiles.git}"
+DOTFILES_REPO="${_dotfiles_repo:-https://github.com/raremonarch/dotfiles.git}"
 DOTFILES_BRANCH="${_dotfiles_branch:-main}"
+
+# Expand shorthand "owner/repo" to full GitHub HTTPS URL
+if [[ "$DOTFILES_REPO" != *"://"* && "$DOTFILES_REPO" != "git@"* ]]; then
+    DOTFILES_REPO="https://github.com/${DOTFILES_REPO%.git}.git"
+fi
 
 log_info "Dotfiles module starting"
 
@@ -21,23 +26,30 @@ if [ ! -d "$HOME/.git" ]; then
     git branch -m "$DOTFILES_BRANCH"
 fi
 
-# Check for remote (robust against grep non-zero exit when no remotes exist)
-# Use a safe pipeline that won't trigger 'set -e' in the caller
-REMOTE_EXISTS=$( (git remote -v 2>/dev/null || true) | grep origin | wc -l || true)
-if [ "$REMOTE_EXISTS" -eq 0 ]; then
+# Add remote if missing; update URL if it doesn't match
+CURRENT_REMOTE=$(git remote get-url origin 2>/dev/null || true)
+if [ -z "$CURRENT_REMOTE" ]; then
     log_step "Adding remote origin"
     git remote add origin "$DOTFILES_REPO"
+elif [ "$CURRENT_REMOTE" != "$DOTFILES_REPO" ]; then
+    log_step "Updating remote origin URL"
+    git remote set-url origin "$DOTFILES_REPO"
 fi
 
 # Fetch latest from remote
-run_with_progress "fetching from origin" git fetch origin
+if ! run_with_progress "fetching from origin" git fetch origin; then
+    log_error "Failed to fetch from remote: $DOTFILES_REPO"
+    return $KIT_EXIT_NETWORK_ERROR
+fi
 
-# Confirm before overwriting local changes
-if ! git diff --quiet HEAD "origin/$DOTFILES_BRANCH"; then
-    prompt_yes_no "Overwrite local changes in $HOME with remote dotfiles?" "n"
-    if [ "$PROMPT_RESULT" != "y" ] && [ "$PROMPT_RESULT" != "Y" ]; then
-        log_info "Aborting dotfiles update. Local changes preserved."
-        return 0
+# Confirm before overwriting local changes (skip if no commits yet — nothing to diff)
+if git rev-parse --verify HEAD >/dev/null 2>&1; then
+    if ! git diff --quiet HEAD "origin/$DOTFILES_BRANCH"; then
+        prompt_yes_no "Overwrite local changes in $HOME with remote dotfiles?" "n"
+        if [ "$PROMPT_RESULT" != "y" ] && [ "$PROMPT_RESULT" != "Y" ]; then
+            log_info "Aborting dotfiles update. Local changes preserved."
+            return 0
+        fi
     fi
 fi
 
@@ -71,7 +83,10 @@ fi
 
 # Overwrite with remote (this will update tracked files; untracked files not
 # listed above will be left alone)
-run_with_progress "resetting to origin/$DOTFILES_BRANCH" git reset --hard "origin/$DOTFILES_BRANCH"
+if ! run_with_progress "resetting to origin/$DOTFILES_BRANCH" git reset --hard "origin/$DOTFILES_BRANCH"; then
+    log_error "Failed to reset to origin/$DOTFILES_BRANCH"
+    return $KIT_EXIT_MODULE_FAILED
+fi
 log_success "Dotfiles deployed successfully"
 
 log_success "Dotfiles module complete"
