@@ -8,11 +8,13 @@
 
 log_info "Setting up PipeWire audio"
 
-# Check if already fully configured
-if systemctl --user is-active --quiet pipewire && \
-   systemctl --user is-active --quiet wireplumber && \
-   command -v amixer >/dev/null 2>&1; then
-    log_success "PipeWire audio stack is already running"
+# Check if all required packages are installed
+if pkg_installed pipewire && \
+   pkg_installed pipewire-alsa && \
+   pkg_installed pipewire-pulse && \
+   pkg_installed wireplumber && \
+   pkg_installed alsa-utils; then
+    log_success "PipeWire audio stack is already installed"
     exit 0
 fi
 
