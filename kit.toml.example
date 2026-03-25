@@ -1,0 +1,102 @@
+# Kitbash Configuration
+# Copy to ~/.config/kitbash/kit.toml and fill in your values.
+#
+# [system] fields are required — kitbash will error if a value is unsupported.
+# [modules] fields are optional opt-in installs — omit or set false to skip.
+
+# ─────────────────────────────────────────────
+# System — required choices
+# ─────────────────────────────────────────────
+
+[system]
+
+# Your machine's hostname.
+hostname = "my-workstation"
+
+# Wayland compositor to install and configure.
+# Supported: "niri" | "hyprland" | "sway"
+wm = "niri"
+
+# Default terminal emulator.
+# Supported: "alacritty" | "kitty" | "foot" | "wezterm"
+terminal = "alacritty"
+
+# Default text editor.
+# Supported: "nvim" | "vim" | "nano" | "emacs" | "code"
+editor = "nvim"
+
+# Login shell.
+# Supported: "zsh" | "bash" | "fish"
+shell = "zsh"
+
+# Audio stack.
+# Supported: "pipewire"
+sound = "pipewire"
+
+# Display manager / greeter.
+# Supported: "greetd" | "sddm"
+greeter = "greetd"
+
+# Cursor theme name (any theme installed on your system).
+cursor = "Breeze"
+
+# Font to install (name shown in font manager after install).
+# Leave empty to skip font installation.
+font = ""
+
+# Wallpaper URL or absolute path. Leave empty to skip.
+wallpaper = ""
+
+# ─────────────────────────────────────────────
+# Dotfiles — git-based home directory management
+# ─────────────────────────────────────────────
+
+[dotfiles]
+
+# Git remote URL for your dotfiles repo. Leave empty to skip.
+repo = ""
+
+# Branch to check out.
+branch = "main"
+
+# ─────────────────────────────────────────────
+# Modules — optional app installs (true/false)
+# ─────────────────────────────────────────────
+
+[modules]
+
+# Development
+docker = false
+vscode = false
+awscli = false
+
+# Browsers
+firefox = true
+google_chrome = false
+
+# Productivity
+obsidian = false
+copyq = true
+imagemagick = true
+
+# Communication & media
+discord = false
+zoom = false
+steam = false
+moonlight = false
+sunshine = false
+
+# Privacy & networking
+nordvpn = false
+dropbox = false
+synology = false
+
+# System tools
+remmina = false
+gnome_boxes = false
+easyeffects = false
+qpwgraph = false
+
+# AI
+ollama = false
+claude = true

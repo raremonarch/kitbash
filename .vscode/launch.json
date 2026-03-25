@@ -1,0 +1,55 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "kitbash install syncthing",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "kitbash.cli",
+            "args": ["install", "syncthing"],
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false
+        },
+        {
+            "name": "kitbash uninstall syncthing",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "kitbash.cli",
+            "args": ["uninstall", "syncthing"],
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false
+        },
+        {
+            "name": "kitbash list",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "kitbash.cli",
+            "args": ["list"],
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false
+        },
+        {
+            "name": "kitbash status",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "kitbash.cli",
+            "args": ["status"],
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false
+        },
+        {
+            "name": "kitbash init",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "kitbash.cli",
+            "args": ["init"],
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false
+        }
+    ]
+}
