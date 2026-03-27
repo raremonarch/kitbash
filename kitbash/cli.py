@@ -13,7 +13,7 @@ from kitbash.config import Config, DEFAULT_CONFIG_PATH
 from kitbash.exceptions import ConfigError
 from kitbash.pkg.detect import detect
 from kitbash.runner import Runner
-from kitbash.setup import alias_is_configured, run_first_time_setup
+from kitbash.setup import alias_is_configured, run_first_time_setup, _write_alias
 from kitbash.shell import Shell, SudoSession
 from kitbash.state import State
 
@@ -166,6 +166,19 @@ def status(
 def init() -> None:
     """Run first-time setup: copy config, create alias, open editor."""
     run_first_time_setup()
+
+
+set_app = typer.Typer(help="Update kitbash settings.")
+app.add_typer(set_app, name="set")
+
+
+@set_app.command("alias")
+def set_alias(name: str = typer.Argument(..., help="Alias name, e.g. kb")) -> None:
+    """Set or update the shell alias for kitbash."""
+    dest, updated = _write_alias(name)
+    verb = "Updated" if updated else "Written"
+    console.print(f"[green]✓[/green] {verb}: [bold]{name}[/bold] → [dim]{dest}[/dim]")
+    console.print(f"  [dim]Reload your shell or run: source {dest}[/dim]")
 
 
 def _print_result(result) -> None:  # type: ignore[no-untyped-def]
