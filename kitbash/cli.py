@@ -1,21 +1,19 @@
 from __future__ import annotations
 
-import sys
 from pathlib import Path
-from typing import Optional
 
 import typer
 from rich.console import Console
 from rich.table import Table
 
 from kitbash import logging as kit_logging
-from kitbash.config import Config, DEFAULT_CONFIG_PATH
+from kitbash.config import DEFAULT_CONFIG_PATH, Config
 from kitbash.exceptions import ConfigError
 from kitbash.pkg.detect import detect
 from kitbash.runner import Runner
-from kitbash.setup import alias_is_configured, run_first_time_setup, _write_alias
+from kitbash.setup import _write_alias, alias_is_configured, run_first_time_setup
 from kitbash.shell import Shell, SudoSession
-from kitbash.state import State
+from kitbash.state import ModuleResult, State
 
 app = typer.Typer(
     name="kitbash",
@@ -26,10 +24,11 @@ console = Console()
 
 
 def _build_runner(config_path: Path) -> Runner:
-    if config_path == DEFAULT_CONFIG_PATH:
-        if not config_path.exists() or not alias_is_configured():
-            run_first_time_setup()
-            raise typer.Exit(0)
+    if config_path == DEFAULT_CONFIG_PATH and (
+        not config_path.exists() or not alias_is_configured()
+    ):
+        run_first_time_setup()
+        raise typer.Exit(0)
 
     try:
         config = Config.load(config_path)
@@ -45,9 +44,13 @@ def _build_runner(config_path: Path) -> Runner:
 
 @app.command()
 def install(
-    module: Optional[str] = typer.Argument(None, help="Module name to install. Omit to install all enabled."),
-    config: Path = typer.Option(DEFAULT_CONFIG_PATH, "--config", "-c", help="Path to kit.toml"),
-    verbose: bool = typer.Option(False, "--verbose", "-v"),
+    module: str | None = typer.Argument(  # noqa: B008
+        None, help="Module name to install. Omit to install all enabled."
+    ),
+    config: Path = typer.Option(  # noqa: B008
+        DEFAULT_CONFIG_PATH, "--config", "-c", help="Path to kit.toml"
+    ),
+    verbose: bool = typer.Option(False, "--verbose", "-v"),  # noqa: B008
 ) -> None:
     """Install one module or all enabled modules."""
     kit_logging.setup_logging(verbose=verbose)
@@ -59,7 +62,7 @@ def install(
                 result = runner.run_one(module)
             except ValueError as e:
                 console.print(f"[red]Error:[/red] {e}")
-                raise typer.Exit(1)
+                raise typer.Exit(1) from None
             _print_result(result)
         else:
             results = runner.run_all()
@@ -68,9 +71,13 @@ def install(
 
 @app.command()
 def uninstall(
-    module: Optional[str] = typer.Argument(None, help="Module name to uninstall. Omit to uninstall all."),
-    config: Path = typer.Option(DEFAULT_CONFIG_PATH, "--config", "-c", help="Path to kit.toml"),
-    verbose: bool = typer.Option(False, "--verbose", "-v"),
+    module: str | None = typer.Argument(  # noqa: B008
+        None, help="Module name to uninstall. Omit to uninstall all."
+    ),
+    config: Path = typer.Option(  # noqa: B008
+        DEFAULT_CONFIG_PATH, "--config", "-c", help="Path to kit.toml"
+    ),
+    verbose: bool = typer.Option(False, "--verbose", "-v"),  # noqa: B008
 ) -> None:
     """Uninstall one module or all installed modules (reverse tier order)."""
     kit_logging.setup_logging(verbose=verbose)
@@ -82,7 +89,7 @@ def uninstall(
                 result = runner.uninstall_one(module)
             except ValueError as e:
                 console.print(f"[red]Error:[/red] {e}")
-                raise typer.Exit(1)
+                raise typer.Exit(1) from None
             _print_result(result)
         else:
             results = runner.uninstall_all()
@@ -91,7 +98,7 @@ def uninstall(
 
 @app.command("list")
 def list_modules(
-    config: Path = typer.Option(DEFAULT_CONFIG_PATH, "--config", "-c"),
+    config: Path = typer.Option(DEFAULT_CONFIG_PATH, "--config", "-c"),  # noqa: B008
 ) -> None:
     """List all available modules with their tier and description."""
     kit_logging.setup_logging()
@@ -124,7 +131,7 @@ def list_modules(
 
 @app.command()
 def status(
-    config: Path = typer.Option(DEFAULT_CONFIG_PATH, "--config", "-c"),
+    config: Path = typer.Option(DEFAULT_CONFIG_PATH, "--config", "-c"),  # noqa: B008
 ) -> None:
     """Show install status of all modules."""
     kit_logging.setup_logging()
@@ -173,7 +180,7 @@ app.add_typer(set_app, name="set")
 
 
 @set_app.command("alias")
-def set_alias(name: str = typer.Argument(..., help="Alias name, e.g. kb")) -> None:
+def set_alias(name: str = typer.Argument(..., help="Alias name, e.g. kb")) -> None:  # noqa: B008
     """Set or update the shell alias for kitbash."""
     dest, updated = _write_alias(name)
     verb = "Updated" if updated else "Written"
@@ -181,14 +188,14 @@ def set_alias(name: str = typer.Argument(..., help="Alias name, e.g. kb")) -> No
     console.print(f"  [dim]Reload your shell or run: source {dest}[/dim]")
 
 
-def _print_result(result) -> None:  # type: ignore[no-untyped-def]
+def _print_result(result: ModuleResult) -> None:
     color = {"success": "green", "skipped": "yellow", "failed": "red"}.get(result.status, "white")
     console.print(f"[{color}][{result.status.upper()}][/{color}] {result.name}: {result.message}")
     if result.status == "failed":
         raise typer.Exit(1)
 
 
-def _print_results_table(results: list) -> None:  # type: ignore[no-untyped-def]
+def _print_results_table(results: list[ModuleResult]) -> None:
     table = Table(show_header=True, show_lines=False)
     table.add_column("Module", style="bold")
     table.add_column("Status", justify="center")

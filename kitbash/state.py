@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import json
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ class ModuleResult:
 class State:
     def __init__(self, path: Path = STATE_PATH) -> None:
         self.path = path
-        self._data: dict[str, dict] = {}
+        self._data: dict[str, dict[str, Any]] = {}
         self._load()
 
     def _load(self) -> None:
@@ -49,13 +49,13 @@ class State:
 
     def record(self, result: ModuleResult) -> None:
         self._data[result.name] = {
-            "last_run": datetime.now(timezone.utc).isoformat(),
+            "last_run": datetime.now(UTC).isoformat(),
             "status": result.status,
             "action": result.action,
             "message": result.message,
         }
 
-    def get(self, module_name: str) -> dict | None:
+    def get(self, module_name: str) -> dict[str, Any] | None:
         return self._data.get(module_name)
 
     def save(self) -> None:
@@ -64,12 +64,12 @@ class State:
             json.dump(
                 {
                     "modules": self._data,
-                    "last_updated": datetime.now(timezone.utc).isoformat(),
+                    "last_updated": datetime.now(UTC).isoformat(),
                 },
                 f,
                 indent=2,
             )
         logger.debug("State saved to %s", self.path)
 
-    def all_modules(self) -> dict[str, dict]:
+    def all_modules(self) -> dict[str, dict[str, Any]]:
         return dict(self._data)

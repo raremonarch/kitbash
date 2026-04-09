@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import subprocess
 from pathlib import Path
-from typing import Any
 
 import pytest
 
@@ -10,7 +9,6 @@ from kitbash.config import Config
 from kitbash.pkg.base import PackageManager
 from kitbash.shell import Shell
 from kitbash.state import State
-
 
 # ---------------------------------------------------------------------------
 # MockShell

@@ -92,8 +92,8 @@ class PackageInstallMixin:
     packages: list[str]
 
     def is_installed(self) -> bool:
-        return all(  # type: ignore[attr-defined]
-            self.pkg.is_installed(p) for p in self.packages
+        return all(
+            self.pkg.is_installed(p) for p in self.packages  # type: ignore[attr-defined]
         )
 
     def install(self) -> None:
@@ -163,16 +163,16 @@ class RepoMixin:
     def remove_repo(self) -> None: ...
 
     def install(self) -> None:
-        logger.info(  # type: ignore[attr-defined]
-            "Adding repository for %s", self.name
+        logger.info(
+            "Adding repository for %s", self.name  # type: ignore[attr-defined]
         )
         self.add_repo()
         super().install()  # type: ignore[misc]
 
     def uninstall(self) -> None:
         super().uninstall()  # type: ignore[misc]
-        logger.info(  # type: ignore[attr-defined]
-            "Removing repository for %s", self.name
+        logger.info(
+            "Removing repository for %s", self.name  # type: ignore[attr-defined]
         )
         self.remove_repo()
 

@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import pytest
-
+from kitbash.config import Config
 from kitbash.modules.apps.syncthing import Syncthing
+from tests.conftest import MockPkg, MockShell
 
 
-def test_install(mock_pkg, mock_shell, mock_config) -> None:
+def test_install(mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config) -> None:
     m = Syncthing(mock_pkg, mock_config, mock_shell)
     result = m.run_install()
     assert result.status == "success"
@@ -16,7 +16,9 @@ def test_install(mock_pkg, mock_shell, mock_config) -> None:
     )
 
 
-def test_install_uses_user_service_not_sudo(mock_pkg, mock_shell, mock_config) -> None:
+def test_install_uses_user_service_not_sudo(
+    mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config
+) -> None:
     m = Syncthing(mock_pkg, mock_config, mock_shell)
     m.run_install()
     enable_cmd = next(
@@ -27,7 +29,9 @@ def test_install_uses_user_service_not_sudo(mock_pkg, mock_shell, mock_config) -
     assert "sudo" not in enable_cmd
 
 
-def test_install_idempotent(mock_pkg, mock_shell, mock_config) -> None:
+def test_install_idempotent(
+    mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config
+) -> None:
     mock_pkg.mark_installed("syncthing")
     m = Syncthing(mock_pkg, mock_config, mock_shell)
     result = m.run_install()
@@ -36,7 +40,7 @@ def test_install_idempotent(mock_pkg, mock_shell, mock_config) -> None:
     assert mock_shell.commands == []
 
 
-def test_uninstall(mock_pkg, mock_shell, mock_config) -> None:
+def test_uninstall(mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config) -> None:
     mock_pkg.mark_installed("syncthing")
     m = Syncthing(mock_pkg, mock_config, mock_shell)
     result = m.run_uninstall()
@@ -48,7 +52,9 @@ def test_uninstall(mock_pkg, mock_shell, mock_config) -> None:
     )
 
 
-def test_uninstall_disables_before_removing_package(mock_pkg, mock_shell, mock_config) -> None:
+def test_uninstall_disables_before_removing_package(
+    mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config
+) -> None:
     mock_pkg.mark_installed("syncthing")
     m = Syncthing(mock_pkg, mock_config, mock_shell)
     m.run_uninstall()
@@ -56,13 +62,13 @@ def test_uninstall_disables_before_removing_package(mock_pkg, mock_shell, mock_c
         i for i, cmd in enumerate(mock_shell.commands)
         if "disable" in cmd
     )
-    # service is disabled before the package remove call
     assert mock_pkg.remove_calls, "package was never removed"
-    # all shell commands happen before remove (remove goes through pkg, not shell)
     assert disable_idx == 0
 
 
-def test_uninstall_not_installed(mock_pkg, mock_shell, mock_config) -> None:
+def test_uninstall_not_installed(
+    mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config
+) -> None:
     m = Syncthing(mock_pkg, mock_config, mock_shell)
     result = m.run_uninstall()
     assert result.status == "skipped"

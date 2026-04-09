@@ -108,7 +108,7 @@ def _import_all_modules() -> None:
     package = kitbash.modules
     prefix = package.__name__ + "."
     for _finder, modname, _ispkg in pkgutil.walk_packages(
-        path=package.__path__,  # type: ignore[attr-defined]
+        path=package.__path__,
         prefix=prefix,
     ):
         importlib.import_module(modname)

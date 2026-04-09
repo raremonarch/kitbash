@@ -44,7 +44,9 @@ class DnfPackageManager(PackageManager):
         return result.returncode == 0
 
     def update(self) -> None:
-        self.shell.run(["sudo", "dnf", "check-update"], check=False, description="checking for updates")
+        self.shell.run(
+            ["sudo", "dnf", "check-update"], check=False, description="checking for updates"
+        )
 
     def add_repo(self, name: str, **kwargs: str) -> None:
         if self.repo_exists(name):

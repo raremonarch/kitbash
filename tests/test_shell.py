@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import subprocess
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -96,9 +95,8 @@ def test_sudo_session_enters_and_exits() -> None:
         r.stdout = "Authentication timestamp timeout: 5.0 minutes\n"
         return r
 
-    with patch("kitbash.shell.subprocess.run", side_effect=fake_run):
-        with SudoSession():
-            pass
+    with patch("kitbash.shell.subprocess.run", side_effect=fake_run), SudoSession():
+        pass
 
     # sudo -V (timeout detection) and sudo -v (auth) must have been called
     assert any("-V" in c for c in calls)
@@ -112,10 +110,12 @@ def test_sudo_session_raises_on_auth_failure() -> None:
         r.stdout = "Authentication timestamp timeout: 5.0 minutes\n"
         return r
 
-    with patch("kitbash.shell.subprocess.run", side_effect=fake_run):
-        with pytest.raises(ShellError, match="sudo authentication failed"):
-            with SudoSession():
-                pass
+    with (
+        patch("kitbash.shell.subprocess.run", side_effect=fake_run),
+        pytest.raises(ShellError, match="sudo authentication failed"),
+        SudoSession(),
+    ):
+        pass
 
 
 def test_sudo_session_keepalive_refreshes_credentials() -> None:

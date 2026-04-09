@@ -83,7 +83,7 @@ def _write_alias(alias: str) -> tuple[Path, bool]:
         return rc, True
 
     with rc.open("a") as f:
-        f.write(f"\n# kitbash alias (added by kitbash init)\n")
+        f.write("\n# kitbash alias (added by kitbash init)\n")
         f.write(_alias_snippet(alias))
     return rc, False
 

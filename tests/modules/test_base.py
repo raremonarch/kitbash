@@ -15,10 +15,10 @@ from kitbash.modules.base import (
 )
 from tests.conftest import MockPkg, MockShell
 
-
 # ---------------------------------------------------------------------------
 # Minimal concrete Module for testing Module ABC
 # ---------------------------------------------------------------------------
+
 
 class SimpleModule(PackageInstallMixin, Module):
     name = "simple"
@@ -31,19 +31,26 @@ class SimpleModule(PackageInstallMixin, Module):
 # PackageInstallMixin
 # ---------------------------------------------------------------------------
 
-def test_package_install_not_installed(mock_pkg, mock_shell, mock_config) -> None:
+
+def test_package_install_not_installed(
+    mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config
+) -> None:
     m = SimpleModule(mock_pkg, mock_config, mock_shell)
     assert not m.is_installed()
 
 
-def test_package_install_run_install(mock_pkg, mock_shell, mock_config) -> None:
+def test_package_install_run_install(
+    mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config
+) -> None:
     m = SimpleModule(mock_pkg, mock_config, mock_shell)
     result = m.run_install()
     assert result.status == "success"
     assert mock_pkg.installed == {"pkg-a", "pkg-b"}
 
 
-def test_package_install_idempotent(mock_pkg, mock_shell, mock_config) -> None:
+def test_package_install_idempotent(
+    mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config
+) -> None:
     mock_pkg.mark_installed("pkg-a", "pkg-b")
     m = SimpleModule(mock_pkg, mock_config, mock_shell)
     result = m.run_install()
@@ -51,7 +58,9 @@ def test_package_install_idempotent(mock_pkg, mock_shell, mock_config) -> None:
     assert mock_pkg.install_calls == []
 
 
-def test_package_uninstall(mock_pkg, mock_shell, mock_config) -> None:
+def test_package_uninstall(
+    mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config
+) -> None:
     mock_pkg.mark_installed("pkg-a", "pkg-b")
     m = SimpleModule(mock_pkg, mock_config, mock_shell)
     result = m.run_uninstall()
@@ -59,7 +68,9 @@ def test_package_uninstall(mock_pkg, mock_shell, mock_config) -> None:
     assert not mock_pkg.installed
 
 
-def test_package_uninstall_not_installed(mock_pkg, mock_shell, mock_config) -> None:
+def test_package_uninstall_not_installed(
+    mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config
+) -> None:
     m = SimpleModule(mock_pkg, mock_config, mock_shell)
     result = m.run_uninstall()
     assert result.status == "skipped"
@@ -69,6 +80,7 @@ def test_package_uninstall_not_installed(mock_pkg, mock_shell, mock_config) -> N
 # ---------------------------------------------------------------------------
 # Module failure paths
 # ---------------------------------------------------------------------------
+
 
 class BrokenInstallModule(PackageInstallMixin, Module):
     name = "_broken_install"
@@ -88,7 +100,9 @@ class BrokenUninstallModule(PackageInstallMixin, Module):
         raise RuntimeError("uninstall exploded")
 
 
-def test_run_install_failure_returns_failed(mock_pkg, mock_shell, mock_config) -> None:
+def test_run_install_failure_returns_failed(
+    mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config
+) -> None:
     m = BrokenInstallModule(mock_pkg, mock_config, mock_shell)
     result = m.run_install()
     assert result.status == "failed"
@@ -96,7 +110,9 @@ def test_run_install_failure_returns_failed(mock_pkg, mock_shell, mock_config) -
     assert result.action == "install"
 
 
-def test_run_uninstall_failure_returns_failed(mock_pkg, mock_shell, mock_config) -> None:
+def test_run_uninstall_failure_returns_failed(
+    mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config
+) -> None:
     mock_pkg.mark_installed("broken-pkg")
     m = BrokenUninstallModule(mock_pkg, mock_config, mock_shell)
     result = m.run_uninstall()
@@ -109,6 +125,7 @@ def test_run_uninstall_failure_returns_failed(mock_pkg, mock_shell, mock_config)
 # SystemdServiceMixin
 # ---------------------------------------------------------------------------
 
+
 class ServiceModule(SystemdServiceMixin, PackageInstallMixin, Module):
     name = "servicemod"
     tier = 1
@@ -116,13 +133,17 @@ class ServiceModule(SystemdServiceMixin, PackageInstallMixin, Module):
     service = "my-daemon"
 
 
-def test_systemd_install_enables_service(mock_pkg, mock_shell, mock_config) -> None:
+def test_systemd_install_enables_service(
+    mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config
+) -> None:
     m = ServiceModule(mock_pkg, mock_config, mock_shell)
     m.run_install()
     assert any("enable" in cmd and "my-daemon" in cmd for cmd in mock_shell.commands)
 
 
-def test_systemd_uninstall_disables_service(mock_pkg, mock_shell, mock_config) -> None:
+def test_systemd_uninstall_disables_service(
+    mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config
+) -> None:
     mock_pkg.mark_installed("my-daemon")
     m = ServiceModule(mock_pkg, mock_config, mock_shell)
     m.run_uninstall()
@@ -132,6 +153,7 @@ def test_systemd_uninstall_disables_service(mock_pkg, mock_shell, mock_config) -
 # ---------------------------------------------------------------------------
 # RepoMixin
 # ---------------------------------------------------------------------------
+
 
 class RepoModule(RepoMixin, PackageInstallMixin, Module):
     name = "repomod"
@@ -145,14 +167,18 @@ class RepoModule(RepoMixin, PackageInstallMixin, Module):
         self.pkg.remove_repo("repomod-stable")
 
 
-def test_repo_install_adds_repo(mock_pkg, mock_shell, mock_config) -> None:
+def test_repo_install_adds_repo(
+    mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config
+) -> None:
     m = RepoModule(mock_pkg, mock_config, mock_shell)
     m.run_install()
     assert mock_pkg.repo_exists("repomod-stable")
     assert "repomod-app" in mock_pkg.installed
 
 
-def test_repo_uninstall_removes_repo(mock_pkg, mock_shell, mock_config) -> None:
+def test_repo_uninstall_removes_repo(
+    mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config
+) -> None:
     mock_pkg.mark_installed("repomod-app")
     mock_pkg.mark_repo("repomod-stable")
     m = RepoModule(mock_pkg, mock_config, mock_shell)
@@ -164,6 +190,7 @@ def test_repo_uninstall_removes_repo(mock_pkg, mock_shell, mock_config) -> None:
 # ---------------------------------------------------------------------------
 # BashrcDMixin
 # ---------------------------------------------------------------------------
+
 
 class BashrcModule(BashrcDMixin, Module):
     name = "bashrcmod"
@@ -180,7 +207,13 @@ class BashrcModule(BashrcDMixin, Module):
         BashrcDMixin.uninstall(self)
 
 
-def test_bashrc_d_install(mock_pkg, mock_shell, mock_config, tmp_path, monkeypatch) -> None:
+def test_bashrc_d_install(
+    mock_pkg: MockPkg,
+    mock_shell: MockShell,
+    mock_config: Config,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setattr("kitbash.modules.base.BASHRC_D", tmp_path / ".bashrc.d")
     m = BashrcModule(mock_pkg, mock_config, mock_shell)
     assert not m.is_installed()
@@ -190,7 +223,13 @@ def test_bashrc_d_install(mock_pkg, mock_shell, mock_config, tmp_path, monkeypat
     assert "PATH" in written
 
 
-def test_bashrc_d_install_idempotent(mock_pkg, mock_shell, mock_config, tmp_path, monkeypatch) -> None:
+def test_bashrc_d_install_idempotent(
+    mock_pkg: MockPkg,
+    mock_shell: MockShell,
+    mock_config: Config,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     bashrc_d = tmp_path / ".bashrc.d"
     monkeypatch.setattr("kitbash.modules.base.BASHRC_D", bashrc_d)
     bashrc_d.mkdir()
@@ -200,7 +239,13 @@ def test_bashrc_d_install_idempotent(mock_pkg, mock_shell, mock_config, tmp_path
     assert result.status == "skipped"
 
 
-def test_bashrc_d_uninstall(mock_pkg, mock_shell, mock_config, tmp_path, monkeypatch) -> None:
+def test_bashrc_d_uninstall(
+    mock_pkg: MockPkg,
+    mock_shell: MockShell,
+    mock_config: Config,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     bashrc_d = tmp_path / ".bashrc.d"
     monkeypatch.setattr("kitbash.modules.base.BASHRC_D", bashrc_d)
     bashrc_d.mkdir()
@@ -216,15 +261,13 @@ def test_bashrc_d_uninstall(mock_pkg, mock_shell, mock_config, tmp_path, monkeyp
 # BinaryInstallMixin
 # ---------------------------------------------------------------------------
 
+
 class BinaryModule(BinaryInstallMixin, Module):
     name = "binarymod"
     tier = 1
     download_url = "https://example.com/tool-{version}.tar.gz"
     version = "1.0.0"
-
-    @property
-    def install_path(self) -> Path:
-        return self._install_path
+    install_path: Path  # set per-instance in tests
 
     def install(self) -> None:
         BinaryInstallMixin.install(self)
@@ -233,24 +276,30 @@ class BinaryModule(BinaryInstallMixin, Module):
         BinaryInstallMixin.uninstall(self)
 
 
-def test_binary_is_installed_false(mock_pkg, mock_shell, mock_config, tmp_path) -> None:
+def test_binary_is_installed_false(
+    mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config, tmp_path: Path
+) -> None:
     m = BinaryModule(mock_pkg, mock_config, mock_shell)
-    m._install_path = tmp_path / "tool"
+    m.install_path = tmp_path / "tool"
     assert not m.is_installed()
 
 
-def test_binary_is_installed_true(mock_pkg, mock_shell, mock_config, tmp_path) -> None:
+def test_binary_is_installed_true(
+    mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config, tmp_path: Path
+) -> None:
     binary = tmp_path / "tool"
     binary.touch()
     m = BinaryModule(mock_pkg, mock_config, mock_shell)
-    m._install_path = binary
+    m.install_path = binary
     assert m.is_installed()
 
 
-def test_binary_uninstall(mock_pkg, mock_shell, mock_config, tmp_path) -> None:
+def test_binary_uninstall(
+    mock_pkg: MockPkg, mock_shell: MockShell, mock_config: Config, tmp_path: Path
+) -> None:
     binary = tmp_path / "tool"
     binary.touch()
     m = BinaryModule(mock_pkg, mock_config, mock_shell)
-    m._install_path = binary
+    m.install_path = binary
     m.run_uninstall()
     assert any("rm" in cmd and str(binary) in cmd for cmd in mock_shell.commands)
