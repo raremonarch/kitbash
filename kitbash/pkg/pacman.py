@@ -35,7 +35,7 @@ class PacmanPackageManager(PackageManager):
         translated = [self.translate(p) for p in packages]
         logger.info("Installing %s using pacman", ", ".join(translated))
         self.shell.run(
-            ["sudo", "pacman", "-S", "--noconfirm", *translated],
+            ["sudo", "pacman", "-Sy", "--noconfirm", *translated],
             description=f"installing {', '.join(translated)}",
         )
 
