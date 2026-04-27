@@ -48,6 +48,30 @@ font = ""
 wallpaper = ""
 
 # ─────────────────────────────────────────────
+# Pacman — Arch-specific settings
+# ─────────────────────────────────────────────
+
+[pacman]
+
+# Preferred AUR helper. Omit or leave empty to auto-detect (paru → yay).
+# aur_helper = "paru"
+
+# ─────────────────────────────────────────────
+# Translations — package name overrides
+# These are merged with built-in defaults; your entries win.
+# ─────────────────────────────────────────────
+
+[translations.pacman]
+# Add any logical-name → arch-package-name overrides here.
+# Example: some-tool = "some-tool-git"
+
+[translations.apt]
+# Add any logical-name → debian-package-name overrides here.
+
+[translations.dnf]
+# Add any logical-name → fedora-package-name overrides here.
+
+# ─────────────────────────────────────────────
 # Dotfiles — git-based home directory management
 # ─────────────────────────────────────────────
 

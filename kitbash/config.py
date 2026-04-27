@@ -43,10 +43,44 @@ class DotfilesConfig:
 
 
 @dataclass
+class TranslationsConfig:
+    """
+    Per-manager package name overrides. User entries win over built-in defaults.
+
+    In kit.toml:
+        [translations.pacman]
+        some-logical-name = "arch-package-name"
+
+        [translations.apt]
+        some-logical-name = "debian-package-name"
+
+        [translations.dnf]
+        some-logical-name = "fedora-package-name"
+    """
+    pacman: dict[str, str] = field(default_factory=dict)
+    apt: dict[str, str] = field(default_factory=dict)
+    dnf: dict[str, str] = field(default_factory=dict)
+
+
+@dataclass
+class PacmanConfig:
+    """
+    Arch/pacman-specific settings.
+
+    In kit.toml:
+        [pacman]
+        aur_helper = "paru"   # "paru" | "yay" — omit to auto-detect
+    """
+    aur_helper: str = ""
+
+
+@dataclass
 class Config:
     system: SystemConfig = field(default_factory=SystemConfig)
     dotfiles: DotfilesConfig = field(default_factory=DotfilesConfig)
     modules: dict[str, bool | str] = field(default_factory=dict)
+    translations: TranslationsConfig = field(default_factory=TranslationsConfig)
+    pacman: PacmanConfig = field(default_factory=PacmanConfig)
 
     @classmethod
     def load(cls, path: Path = DEFAULT_CONFIG_PATH) -> Config:
@@ -64,7 +98,8 @@ class Config:
 
         raw_system = data.get("system", {})
         raw_dotfiles = data.get("dotfiles", {})
-        modules = data.get("modules", {})
+        raw_translations = data.get("translations", {})
+        raw_pacman = data.get("pacman", {})
 
         system = SystemConfig(
             hostname=raw_system.get("hostname", ""),
@@ -84,7 +119,25 @@ class Config:
             branch=raw_dotfiles.get("branch", "main"),
         )
 
-        config = cls(system=system, dotfiles=dotfiles, modules=modules)
+        translations = TranslationsConfig(
+            pacman=raw_translations.get("pacman", {}),
+            apt=raw_translations.get("apt", {}),
+            dnf=raw_translations.get("dnf", {}),
+        )
+
+        pacman = PacmanConfig(
+            aur_helper=raw_pacman.get("aur_helper", ""),
+        )
+
+        modules = data.get("modules", {})
+
+        config = cls(
+            system=system,
+            dotfiles=dotfiles,
+            modules=modules,
+            translations=translations,
+            pacman=pacman,
+        )
         config._validate()
         return config
 

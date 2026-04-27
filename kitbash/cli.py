@@ -37,7 +37,7 @@ def _build_runner(config_path: Path) -> Runner:
         raise typer.Exit(1) from e
 
     shell = Shell()
-    pkg = detect()
+    pkg = detect(config)
     state = State()
     return Runner(pkg=pkg, config=config, shell=shell, state=state)
 
@@ -53,7 +53,7 @@ def install(
     verbose: bool = typer.Option(False, "--verbose", "-v"),  # noqa: B008
 ) -> None:
     """Install one module or all enabled modules."""
-    kit_logging.setup_logging(verbose=verbose)
+    kit_logging.setup_logging(verbose=verbose, session=f"install {module or 'all'}")
     runner = _build_runner(config)
 
     with SudoSession():
@@ -80,7 +80,7 @@ def uninstall(
     verbose: bool = typer.Option(False, "--verbose", "-v"),  # noqa: B008
 ) -> None:
     """Uninstall one module or all installed modules (reverse tier order)."""
-    kit_logging.setup_logging(verbose=verbose)
+    kit_logging.setup_logging(verbose=verbose, session=f"uninstall {module or 'all'}")
     runner = _build_runner(config)
 
     with SudoSession():
@@ -109,7 +109,7 @@ def list_modules(
         cfg = Config.empty()
 
     shell = Shell()
-    pkg = detect()
+    pkg = detect(cfg)
     state = State()
     runner = Runner(pkg=pkg, config=cfg, shell=shell, state=state)
 
@@ -142,7 +142,7 @@ def status(
         cfg = Config.empty()
 
     shell = Shell()
-    pkg = detect()
+    pkg = detect(cfg)
     state = State()
     runner = Runner(pkg=pkg, config=cfg, shell=shell, state=state)
 
@@ -167,6 +167,47 @@ def status(
         table.add_row(cls.name, str(cls.tier), installed_str, last_run, last_status)
 
     console.print(table)
+
+
+@app.command()
+def log(
+    module: str | None = typer.Argument(None, help="Filter by module name"),  # noqa: B008
+    lines: int = typer.Option(50, "--lines", "-n", help="Number of recent lines to show"),  # noqa: B008
+    follow: bool = typer.Option(False, "--follow", "-f", help="Follow the log in real time"),  # noqa: B008
+    list_logs: bool = typer.Option(False, "--list", "-l", help="List all log files"),  # noqa: B008
+) -> None:
+    """Show the most recent kitbash log, or list all logs."""
+    import subprocess
+    from datetime import datetime
+
+    from kitbash.logging import LOG_DIR
+
+    logs = sorted(LOG_DIR.glob("*.log"), key=lambda p: p.stat().st_mtime) if LOG_DIR.exists() else []
+
+    if not logs:
+        console.print("[yellow]No log files found.[/yellow]")
+        raise typer.Exit(1)
+
+    if list_logs:
+        for p in reversed(logs):
+            mtime = datetime.fromtimestamp(p.stat().st_mtime).strftime("%Y-%m-%d %H:%M:%S")
+            console.print(f"{mtime}  {p.name}", markup=False, highlight=False)
+        return
+
+    if module:
+        logs = [p for p in logs if module in p.name]
+        if not logs:
+            console.print(f"[yellow]No log files found matching '{module}'[/yellow]")
+            raise typer.Exit(1)
+
+    target = logs[-1]
+
+    if follow:
+        subprocess.run(["tail", "-f", str(target)])
+    else:
+        content = target.read_text().splitlines()
+        for line in content[-lines:]:
+            console.print(line, markup=False, highlight=False)
 
 
 @app.command()

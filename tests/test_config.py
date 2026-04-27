@@ -127,3 +127,37 @@ def test_empty_config() -> None:
     assert config.system.hostname == ""
     assert config.modules == {}
     assert config.dotfiles.branch == "main"
+    assert config.translations.pacman == {}
+    assert config.translations.apt == {}
+    assert config.translations.dnf == {}
+    assert config.pacman.aur_helper == ""
+
+
+def test_translations_loaded(tmp_path: Path) -> None:
+    cfg_file = tmp_path / "kit.toml"
+    cfg_file.write_text(
+        "[translations.pacman]\n"
+        'my-tool = "my-tool-git"\n'
+        "[translations.apt]\n"
+        'fd = "fd-find"\n'
+        "[translations.dnf]\n"
+        'fd = "fd-find"\n'
+    )
+    config = Config.load(cfg_file)
+    assert config.translations.pacman == {"my-tool": "my-tool-git"}
+    assert config.translations.apt == {"fd": "fd-find"}
+    assert config.translations.dnf == {"fd": "fd-find"}
+
+
+def test_pacman_aur_helper_loaded(tmp_path: Path) -> None:
+    cfg_file = tmp_path / "kit.toml"
+    cfg_file.write_text('[pacman]\naur_helper = "yay"\n')
+    config = Config.load(cfg_file)
+    assert config.pacman.aur_helper == "yay"
+
+
+def test_pacman_aur_helper_defaults_empty(tmp_path: Path) -> None:
+    cfg_file = tmp_path / "kit.toml"
+    cfg_file.write_text("[system]\n")
+    config = Config.load(cfg_file)
+    assert config.pacman.aur_helper == ""

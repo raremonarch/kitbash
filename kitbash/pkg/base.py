@@ -29,8 +29,11 @@ class PackageManager(ABC):
     def translate(self, name: str) -> str:
         """
         Translate a logical package name to this distro's package name.
-        Subclasses override PACKAGE_NAMES to provide mappings.
+        User translations (from kit.toml) take precedence over built-in defaults.
         """
+        user: dict[str, str] = getattr(self, "_user_translations", {})
+        if name in user:
+            return user[name]
         return self.PACKAGE_NAMES.get(name, name)
 
     # Subclasses may override this with distro-specific name mappings
