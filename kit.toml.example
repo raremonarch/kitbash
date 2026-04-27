@@ -78,6 +78,18 @@ google_chrome = false
 obsidian = false
 copyq = true
 imagemagick = true
+gimp = false
+
+# CLI tools
+uv = true
+fzf = true
+fd = true
+zoxide = true
+
+# Screenshot (Wayland)
+grim = true
+slurp = true
+swappy = true
 
 # Communication & media
 discord = false
