@@ -10,10 +10,12 @@ logger = logging.getLogger(__name__)
 
 class NordVPN(Module):
     """
-    NordVPN client, installed via the official NordVPN installer script.
+    NordVPN client.
 
-    The installer configures the nordvpn repository and installs the package.
-    After install, the current user is added to the nordvpn group for
+    Arch:          installed from AUR as nordvpn-bin via paru/yay.
+    Fedora/Debian: installed via the official NordVPN installer script.
+
+    After install the current user is added to the nordvpn group for
     non-root CLI access and the nordvpnd daemon is enabled.
 
     NOTE: A logout/login is required for group membership to take effect.
@@ -30,10 +32,20 @@ class NordVPN(Module):
         return self.shell.which("nordvpn")
 
     def install(self) -> None:
-        self.shell.run(
-            ["bash", "-c", f"sh <(curl -sSf '{self._INSTALLER_URL}') -n"],
-            description="running NordVPN installer",
-        )
+        from kitbash.pkg.pacman import PacmanPackageManager
+
+        if isinstance(self.pkg, PacmanPackageManager):
+            self.pkg.install_aur("nordvpn-bin")
+        else:
+            self.shell.run(
+                [
+                    "bash", "-c",
+                    f"set -e; t=$(mktemp); trap 'rm -f \"$t\"' EXIT;"
+                    f" curl -sSf '{self._INSTALLER_URL}' > \"$t\"; sudo bash \"$t\" -n",
+                ],
+                description="running NordVPN installer",
+            )
+
         user = getpass.getuser()
         self.shell.run(
             ["sudo", "usermod", "-aG", "nordvpn", user],

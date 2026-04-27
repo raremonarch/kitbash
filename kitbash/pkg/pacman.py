@@ -14,21 +14,33 @@ class PacmanPackageManager(PackageManager):
 
     PACKAGE_NAMES: dict[str, str] = {
         "breeze-cursor-theme": "breeze",
+        "nordvpn": "nordvpn-bin",
     }
 
-    def __init__(self, shell: Shell) -> None:
+    def __init__(
+        self,
+        shell: Shell,
+        *,
+        translations: dict[str, str] | None = None,
+        aur_helper: str = "",
+    ) -> None:
         self.shell = shell
+        self._user_translations: dict[str, str] = translations or {}
+        self._aur_helper_override = aur_helper
         self._aur_helper: str | None = None
 
     @property
     def aur_helper(self) -> str:
         if self._aur_helper is None:
-            for helper in ("paru", "yay"):
-                if self.shell.which(helper):
-                    self._aur_helper = helper
-                    break
+            if self._aur_helper_override:
+                self._aur_helper = self._aur_helper_override
             else:
-                self._aur_helper = "paru"  # will be bootstrapped on first use
+                for helper in ("paru", "yay"):
+                    if self.shell.which(helper):
+                        self._aur_helper = helper
+                        break
+                else:
+                    self._aur_helper = "paru"  # will be bootstrapped on first use
         return self._aur_helper
 
     def install(self, *packages: str) -> None:

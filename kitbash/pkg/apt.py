@@ -13,11 +13,12 @@ class AptPackageManager(PackageManager):
     name = "apt"
 
     PACKAGE_NAMES: dict[str, str] = {
-        "breeze-cursor-theme": "breeze-cursor-theme",
+        "fd": "fd-find",
     }
 
-    def __init__(self, shell: Shell) -> None:
+    def __init__(self, shell: Shell, *, translations: dict[str, str] | None = None) -> None:
         self.shell = shell
+        self._user_translations: dict[str, str] = translations or {}
 
     def install(self, *packages: str) -> None:
         translated = [self.translate(p) for p in packages]
