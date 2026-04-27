@@ -178,6 +178,9 @@ def init() -> None:
 set_app = typer.Typer(help="Update kitbash settings.")
 app.add_typer(set_app, name="set")
 
+wallpaper_app = typer.Typer(help="Manage desktop wallpaper.")
+app.add_typer(wallpaper_app, name="wallpaper")
+
 
 @set_app.command("alias")
 def set_alias(name: str = typer.Argument(..., help="Alias name, e.g. kb")) -> None:  # noqa: B008
@@ -186,6 +189,39 @@ def set_alias(name: str = typer.Argument(..., help="Alias name, e.g. kb")) -> No
     verb = "Updated" if updated else "Written"
     console.print(f"[green]✓[/green] {verb}: [bold]{name}[/bold] → [dim]{dest}[/dim]")
     console.print(f"  [dim]Reload your shell or run: source {dest}[/dim]")
+
+
+
+@wallpaper_app.command("get")
+def wallpaper_get() -> None:
+    """Print the currently active wallpaper path."""
+    from kitbash.wallpaper import get_current
+
+    path = get_current()
+    if path:
+        console.print(str(path))
+    else:
+        console.print("[yellow]No wallpaper found.[/yellow]")
+        raise typer.Exit(1)
+
+
+@wallpaper_app.command("set")
+def wallpaper_set(
+    path: Path = typer.Argument(..., help="Path to the new wallpaper image"),  # noqa: B008
+    verbose: bool = typer.Option(False, "--verbose", "-v"),  # noqa: B008
+) -> None:
+    """Set the desktop wallpaper and apply it live."""
+    kit_logging.setup_logging(verbose=verbose)
+    from kitbash.wallpaper import set_wallpaper
+
+    if not path.exists():
+        console.print(f"[red]Error:[/red] File not found: {path}")
+        raise typer.Exit(1)
+    shell = Shell()
+    with SudoSession():
+        set_wallpaper(path, shell)
+    console.print(f"[green]✓[/green] Wallpaper set to [bold]{path}[/bold]")
+
 
 
 def _print_result(result: ModuleResult) -> None:
